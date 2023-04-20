@@ -21,6 +21,16 @@ Compliance Articulated Robot Arm
   * [ ] Homing and initializaiton
   * [ ] Joint class 
   * [ ] Scara class
+> Recordatorio wis
+
+Crear clase joint
+  + Joint(name, axis, gains)
+  + Luego se puede tener un dict {joint.name: joint}
+  + Calibration se aplica sobre cada joint (joint.calibrate(),
+    tb incluir otras como joint.requeste_state(), etc)
+  + Luego esta la clase nelen, que inicializa los joints y tiene
+    funciones de más alto nivel (nelen.homing() y nelen.move()
+    nelen.move_with_pump(), otras? )
 
 **Mechanical** 
 - [ ] Drill octagonal plate
