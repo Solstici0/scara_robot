@@ -1,0 +1,4 @@
+[org file features](https://orgmode.org/features.html)
+
+Lets create an interactive experience for sharing and teaching how to 
+use our SCARA robot
