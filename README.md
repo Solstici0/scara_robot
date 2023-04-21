@@ -22,7 +22,6 @@ Compliance Articulated Robot Arm
   * [ ] Joint class 
   * [ ] Scara class
 > Recordatorio wis
-
 Crear clase joint
   + Joint(name, axis, gains)
   + Luego se puede tener un dict {joint.name: joint}
