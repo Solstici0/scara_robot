@@ -1,0 +1,10 @@
+#+TITLE: Laboratory experience
+#+AUTHOR: Solsticio
+#+STARTUP: overview
+
+* Meeting <2023-04-20 Do>
+** Calibration routines
+- Errors: ENCODER_ERROR_CPR_POLEPAIRS_MISMATCH
+- LS están mal configurados:
+  + En el codo se observa que en modo brazo izq. se cierra, pero hace homing con el LS opuesto  y el offset es abriendose. Confirmar lo último!
+  + En el hombro se observa lo mismo, pero el offset es cerrándose
