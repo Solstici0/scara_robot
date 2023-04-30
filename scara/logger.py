@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger("SCARA")
+logger = logging.getLogger("scara")
 logging_handler = logging.StreamHandler()
 logging_handler.setFormatter(
     logging.Formatter(

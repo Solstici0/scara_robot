@@ -3,7 +3,24 @@ A python library and documentation to interact with Solsticio's Selective
 Compliance Articulated Robot Arm
 
 ## Usage
-#
+You can start by creating a virtual environment and install scara package 
+in development mode:
+
+```bash
+$ python -m venv nelen
+$ source nelen/bin/activate
+$ pip install -e .
+```
+
+Then you can validate that everything is working well by importing the library 
+and create an scara object
+
+``` bash
+$ python 
+>>> import scara
+>>> scara.Scara()
+```
+
 ### Tree structure
 
 ## TODO
