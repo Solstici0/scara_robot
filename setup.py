@@ -17,7 +17,7 @@ def read_description():
 
 setup(
     name='scara',
-    version='0.0.1',
+    version='0.0.2',
     description='Solsticios Selective Compliance Articulated Robot Arm package',
     long_description=read_description(),
     long_description_content_type="text/markdown",
