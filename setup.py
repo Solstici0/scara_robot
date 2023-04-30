@@ -11,7 +11,7 @@ def read_requirements():
 
 
 def read_description():
-    with open("README.md", "r") as f:
+    with open("README_ext.md", "r") as f:
         descr = f.read()
     return descr
 
@@ -20,11 +20,12 @@ setup(
     version='0.0.1',
     description='Solsticios Selective Compliance Articulated Robot Arm package',
     long_description=read_description(),
-    long_description_content_type="text/md",
-    packages=setuptools.find_packages(),
+    long_description_content_type="text/markdown",
+    packages=["scara"],
+    install_requires=read_requirements(),
     author='Solsticio',
     author_email='contacto@solstic.io',
     url='https://github.com/Solstici0/scara',
-    license_files=('LICENSE.txt',),
+    license_files=('LICENSE',),
 
 )
