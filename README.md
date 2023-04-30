@@ -18,7 +18,7 @@ and create an scara object
 ``` bash
 $ python 
 >>> import scara
->>> scara.Scara()
+>>> scara.Robot()
 ```
 
 ### Tree structure
