@@ -3,10 +3,12 @@ robot.py:
     SCARA robot class
 """
 import logging
+import os
 
 from .joint import Joint
-from .tools import inverse_kinematic, \
-                   a_interaction
+from .tools.inverse_kinematic import inverse_kinematic
+#from .tools.a_interaction import a_interaction
+from .tools.manage_files import load_robot_config
 
 logger = logging.getLogger(__name__)
 
@@ -15,16 +17,39 @@ class Robot():
     Robot class
     """
     def __init__(self,
-               config_path: str = '.'):
+               config_file: str = "default"):
         logger.info("Initializing SCARA robot")
-        #hombro_axis, codo_axis, z_axis, humero_len, radio-cubito_len =
-        #load_config(config_path)
-        #self.hombro = Joint(hombro_axis)
-        #self.codo = Joint(codo_axis)
-        #self.z = Joint(z_axis)
-        #self.h_len = humero_len
-        #self.rc_len = radio-cubito_len
-        pass
+        self.config_file = config_file + ".yaml"
+        abs_path = os.path.dirname(__file__)
+        self.config_path = os.path.join(abs_path,
+                                        "config",
+                                        self.config_file)
+        # load configuration
+        joints, dimensions = load_robot_config(self.config_path)
+        # joints
+        self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
+                            axis=joints["hombro"]["axis"],
+                            config_file=config_file)
+        self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
+                          axis=joints["codo"]["axis"],
+                          config_file=config_file)
+        self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
+                       axis=joints["z"]["axis"],
+                       config_file=config_file)
+        # dict with all joints
+        self.all_joints = {"hombro": self.hombro,
+                           "codo": self.codo,
+                           "z": self.z}
+        # dict with all home position per joint (joint's zero, not cartesian)
+        self.all_pos_0 = {"hombro": self.hombro.pos_0,
+                          "codo": self.codo.pos_0,
+                          "z": self.z.pos_0}
+        self.h_len = dimensions["humero_len"]
+        self.rc_len = dimensions["radio_cubito_len"]
+        self.max_hombro_degree = dimensions["max_hombro_degree"]
+        self.max_codo_degree = dimensions["max_codo_degree"]
+        self.cartesian_0 = dimensions["cartesian_0"]
+        self.orientation = dimensions["orientation"]
 
     def setup(self):
         """
