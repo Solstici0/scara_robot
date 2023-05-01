@@ -53,11 +53,11 @@ class Robot():
 
     def setup(self):
         """
+        Setup all joints
         """
         logger.info("Setup routine")
-        #TODO this routine should be sequential
-        #self.joint.j_setup()
-        pass
+        for joint in self.all_joints.values():
+            joint.j_setup()
 
     def go_home(self):
         """
