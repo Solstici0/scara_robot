@@ -75,7 +75,7 @@ class Robot():
             mode: str = None):
         """
         Move to cartesian target position
-        Paramters:
+        Parameters:
         ----------
         x : x position
         y : z position
