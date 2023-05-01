@@ -357,7 +357,15 @@ venv/
 ENV/
 env.bak/
 venv.bak/o
+nelen/
 
 # Sphinx documentation
+docs/build/
 docs/_build/
 
+# setup.py dist directory
+dist
+# setup.py build directory
+build
+# Egg metadata
+*.egg-info
