@@ -72,15 +72,27 @@ class Robot():
             x: float,
             y: float,
             z: float,
-            mode: str):
+            mode: str = None):
         """
+        Move to cartesian target position
         """
         logger.info("Moving to position x: %.2f, y: %.2f, z: %.2f in %s mode",
                     x,
                     y,
                     z,
                     mode)
-        #TODO should be possible to do it in  parallel
-        #theta_1, theta_2 = inverse_kinematic(x, y, self.h_len, self.rc_len)
-        #self.joint.j_move2(joint_pos)
-        pass
+        # given x,y position calculate hombro and codo angles using
+        # inverse kinametic
+        angles = inverse_kinematic(x=x,
+                                   y=y,
+                                   h_len=self.h_len,
+                                   rc_len=self.rc_len,
+                                   max_hombro_degree=self.max_hombro_degree,
+                                   max_codo_degree=self.max_codo_degree,
+                                   orientation=self.orientation
+                                   )
+        all_pos = {"hombro": angles["hombro"], "codo": angles["codo"], "z": z}
+        for joint_name, joint in self.all_joints.items():
+            pos_from_0 = all_pos[joint_name] - self.all_pos_0[joint_name]
+            joint.j_move2(position_increment=pos_from_0,
+                          from_goal_point=False)
