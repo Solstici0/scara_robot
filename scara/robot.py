@@ -61,10 +61,12 @@ class Robot():
 
     def go_home(self):
         """
+        Homing routine
         """
         logger.info("Doing homing routine")
-        #self.joint.j_move2(joint_pos_0)
-        pass
+        self.move2(x=self.cartesian_0["x"],
+                   y=self.cartesian_0["y"],
+                   z=self.cartesian_0["z"])
 
     def move2(self,
             x: float,
