@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>scara.robot &mdash; SCARA Robot 0.0.3 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCARA Robot
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCARA Robot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">scara.robot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for scara.robot</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">robot.py:</span>
+<span class="sd">    SCARA robot class</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">.joint</span> <span class="kn">import</span> <span class="n">Joint</span>
+<span class="kn">from</span> <span class="nn">.tools.inverse_kinematic</span> <span class="kn">import</span> <span class="n">inverse_kinematic</span>
+<span class="c1">#from .tools.a_interaction import a_interaction</span>
+<span class="kn">from</span> <span class="nn">.tools.manage_files</span> <span class="kn">import</span> <span class="n">load_robot_config</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Robot"><a class="viewcode-back" href="../../scara.html#scara.robot.Robot">[docs]</a><span class="k">class</span> <span class="nc">Robot</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Robot class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+               <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing SCARA robot&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_file</span> <span class="o">=</span> <span class="n">config_file</span> <span class="o">+</span> <span class="s2">&quot;.yaml&quot;</span>
+        <span class="n">abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">abs_path</span><span class="p">,</span>
+                                        <span class="s2">&quot;config&quot;</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="c1"># load configuration</span>
+        <span class="n">joints</span><span class="p">,</span> <span class="n">dimensions</span> <span class="o">=</span> <span class="n">load_robot_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">)</span>
+        <span class="c1"># joints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hombro</span> <span class="o">=</span> <span class="n">Joint</span><span class="p">(</span><span class="n">odrv_serial_num</span><span class="o">=</span><span class="n">joints</span><span class="p">[</span><span class="s2">&quot;hombro&quot;</span><span class="p">][</span><span class="s2">&quot;odrv_serial_num&quot;</span><span class="p">],</span>
+                            <span class="n">axis</span><span class="o">=</span><span class="n">joints</span><span class="p">[</span><span class="s2">&quot;hombro&quot;</span><span class="p">][</span><span class="s2">&quot;axis&quot;</span><span class="p">],</span>
+                            <span class="n">config_file</span><span class="o">=</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">codo</span> <span class="o">=</span> <span class="n">Joint</span><span class="p">(</span><span class="n">odrv_serial_num</span><span class="o">=</span><span class="n">joints</span><span class="p">[</span><span class="s2">&quot;codo&quot;</span><span class="p">][</span><span class="s2">&quot;odrv_serial_num&quot;</span><span class="p">],</span>
+                          <span class="n">axis</span><span class="o">=</span><span class="n">joints</span><span class="p">[</span><span class="s2">&quot;codo&quot;</span><span class="p">][</span><span class="s2">&quot;axis&quot;</span><span class="p">],</span>
+                          <span class="n">config_file</span><span class="o">=</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">Joint</span><span class="p">(</span><span class="n">odrv_serial_num</span><span class="o">=</span><span class="n">joints</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">][</span><span class="s2">&quot;odrv_serial_num&quot;</span><span class="p">],</span>
+                       <span class="n">axis</span><span class="o">=</span><span class="n">joints</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">][</span><span class="s2">&quot;axis&quot;</span><span class="p">],</span>
+                       <span class="n">config_file</span><span class="o">=</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="c1"># dict with all joints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_joints</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hombro&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hombro</span><span class="p">,</span>
+                           <span class="s2">&quot;codo&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">codo</span><span class="p">,</span>
+                           <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">}</span>
+        <span class="c1"># dict with all home position per joint (joint&#39;s zero, not cartesian)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_pos_0</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hombro&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hombro</span><span class="o">.</span><span class="n">pos_0</span><span class="p">,</span>
+                          <span class="s2">&quot;codo&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">codo</span><span class="o">.</span><span class="n">pos_0</span><span class="p">,</span>
+                          <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">pos_0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_len</span> <span class="o">=</span> <span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;humero_len&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc_len</span> <span class="o">=</span> <span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;radio_cubito_len&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_hombro_degree</span> <span class="o">=</span> <span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;max_hombro_degree&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_codo_degree</span> <span class="o">=</span> <span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;max_codo_degree&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_0</span> <span class="o">=</span> <span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;cartesian_0&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">dimensions</span><span class="p">[</span><span class="s2">&quot;orientation&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Robot.setup"><a class="viewcode-back" href="../../scara.html#scara.robot.Robot.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setup all joints</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Setup routine&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_joints</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">joint</span><span class="o">.</span><span class="n">j_setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Robot.go_home"><a class="viewcode-back" href="../../scara.html#scara.robot.Robot.go_home">[docs]</a>    <span class="k">def</span> <span class="nf">go_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Homing routine</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Doing homing routine&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian_0</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
+                   <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian_0</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span>
+                   <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian_0</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Robot.move2"><a class="viewcode-back" href="../../scara.html#scara.robot.Robot.move2">[docs]</a>    <span class="k">def</span> <span class="nf">move2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move to cartesian target position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Moving to position x: </span><span class="si">%.2f</span><span class="s2">, y: </span><span class="si">%.2f</span><span class="s2">, z: </span><span class="si">%.2f</span><span class="s2"> in </span><span class="si">%s</span><span class="s2"> mode&quot;</span><span class="p">,</span>
+                    <span class="n">x</span><span class="p">,</span>
+                    <span class="n">y</span><span class="p">,</span>
+                    <span class="n">z</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="p">)</span>
+        <span class="c1"># given x,y position calculate hombro and codo angles using</span>
+        <span class="c1"># inverse kinametic</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">inverse_kinematic</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                                   <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                                   <span class="n">h_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">h_len</span><span class="p">,</span>
+                                   <span class="n">rc_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_len</span><span class="p">,</span>
+                                   <span class="n">max_hombro_degree</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_hombro_degree</span><span class="p">,</span>
+                                   <span class="n">max_codo_degree</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_codo_degree</span><span class="p">,</span>
+                                   <span class="n">orientation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span>
+                                   <span class="p">)</span>
+        <span class="n">all_pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hombro&quot;</span><span class="p">:</span> <span class="n">angles</span><span class="p">[</span><span class="s2">&quot;hombro&quot;</span><span class="p">],</span> <span class="s2">&quot;codo&quot;</span><span class="p">:</span> <span class="n">angles</span><span class="p">[</span><span class="s2">&quot;codo&quot;</span><span class="p">],</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">joint_name</span><span class="p">,</span> <span class="n">joint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_joints</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">pos_from_0</span> <span class="o">=</span> <span class="n">all_pos</span><span class="p">[</span><span class="n">joint_name</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_pos_0</span><span class="p">[</span><span class="n">joint_name</span><span class="p">]</span>
+            <span class="n">joint</span><span class="o">.</span><span class="n">j_move2</span><span class="p">(</span><span class="n">position_increment</span><span class="o">=</span><span class="n">pos_from_0</span><span class="p">,</span>
+                          <span class="n">from_goal_point</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Solsticio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
