@@ -54,6 +54,7 @@ class Joint():
 
     def j_setup(self):
         """
+        Setup routine for joints
         """
         logger.info("Setup routine for %s axis", self.axis)
         while self.state == 1:
@@ -80,12 +81,23 @@ class Joint():
 
     def j_go_home(self):
         """
+        Homing routine for joints
         """
         logger.info("Axis %s going to home position", self.axis)
         self.j_move2(self.pos_0)
 
-    def j_move2(self, position_increment, from_goal_point=False):
+    def j_move2(self, position_increment: float, from_goal_point: bool =False):
         """
+        Move joint to target position
+
+        Parameters:
+        -----------
+        position_increment : incremental position from current position
+        from_goal_point :
+
+        Returns:
+        --------
+        None
         """
         logger.info("Axis %s going to %.2f position",
                     self.axis, position_increment)

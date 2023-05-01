@@ -75,6 +75,16 @@ class Robot():
             mode: str = None):
         """
         Move to cartesian target position
+        Paramters:
+        ----------
+        x : x position
+        y : z position
+        z : z position
+        mode : to use an specific mode (not implemented yet)
+
+        Returns:
+        --------
+        None
         """
         logger.info("Moving to position x: %.2f, y: %.2f, z: %.2f in %s mode",
                     x,
