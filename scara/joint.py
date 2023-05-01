@@ -65,4 +65,10 @@ class Joint():
     def j_move2(self, position):
         """
         """
-        logger.info("Axis %s going to %.2f position", self.axis, position)
+        logger.info("Axis %s going to %.2f position",
+                    self.axis, position_increment)
+        position_inc_corrected = pos2motors(
+                        joint_position=position_increment,
+                        hardware_correction=self.hardware_correction)
+        self.joint.controller.move_incremental(pos_increment=position_inc_corrected,
+                                               from_goal_point=from_goal_point)
