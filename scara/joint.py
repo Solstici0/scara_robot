@@ -56,6 +56,27 @@ class Joint():
         """
         """
         logger.info("Setup routine for %s axis", self.axis)
+        while self.state == 1:
+            self.joint.requested_state = 7
+            #sleep 12
+            self.joint.requested_state = 11
+            #sleep 15
+            #if self.odrv_serial_num is None:
+            #    self.joint.requested_state = 2
+            self.state = self.joint.current_state
+            if self.state == 1:
+                logger.info("%s axis successfully what?")
+                self.joint.resquested_state = 8
+                self.state = self.joint.current_state
+                if self.state == 8:
+                    logger.info("%s axis successfully enters control mode",
+                                self.name)
+            else:
+                logger.info("Homing failed. %s axis current state %i",
+                            self.name, self.joint.current_state)
+                if self.odrv_serial_num is not None:
+                    dump_errors(self.odrv, True)
+                #sleep 1
 
     def j_go_home(self):
         """
