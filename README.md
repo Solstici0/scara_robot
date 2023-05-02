@@ -2,6 +2,8 @@
 A python library and documentation to interact with Solsticio's Selective 
 Compliance Articulated Robot Arm
 
+You can read the SCARA robot documentation [here](https://scara-robot.readthedocs.io/en/latest/)
+
 ## Usage
 You can start by creating a virtual environment and install scara package 
 in development mode:
