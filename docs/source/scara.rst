@@ -12,14 +12,6 @@ scara.joint module
    :undoc-members:
    :show-inheritance:
 
-scara.logger module
--------------------
-
-.. automodule:: scara.logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 scara.robot module
 ------------------
 

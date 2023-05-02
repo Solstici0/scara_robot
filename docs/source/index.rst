@@ -10,6 +10,9 @@ Welcome to SCARA Robot's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
+   usage
+
 
 
 Indices and tables
