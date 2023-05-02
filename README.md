@@ -28,13 +28,16 @@ $ python
 
 ### Tree structure
 
+
 ## TODO
+
 
 
 **Hardware**
 - [ ] Install Pull-up pcbs
 - [ ] Install CAN pcb 
 - [ ] Install fans
+- [ ] Include minimum hardware documentation 
 
 **Software**
 - [X] Define project structure
