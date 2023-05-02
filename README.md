@@ -7,6 +7,7 @@ Compliance Articulated Robot Arm
 You can read the SCARA robot documentation [here](https://scara-robot.readthedocs.io/en/latest/)
 
 ## Usage
+
 You can start by creating a virtual environment and install scara package 
 in development mode:
 
@@ -29,6 +30,7 @@ $ python
 
 ## TODO
 
+
 **Hardware**
 - [ ] Install Pull-up pcbs
 - [ ] Install CAN pcb 
@@ -42,6 +44,9 @@ $ python
   * [X] Homing and initializaiton
   * [X] Joint class 
   * [X] Scara class
+- [ ] Include tests
+  * [ ] Inverse kinematics
+  * [ ] With FakeOdrv
 
 **Mechanical** 
 - [ ] Drill octagonal plate
@@ -50,5 +55,10 @@ $ python
 - [ ] Weld wheel plates to structure
 - [ ] Buy and install wheels 
 - [ ] Drill structure and install electrical box
+
+**All**
+- [ ] Improve documentation
+  * [ ] Include introduction
+  * [ ] Include links to thesis
 
 ## References
