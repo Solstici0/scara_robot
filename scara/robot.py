@@ -54,6 +54,14 @@ class Robot():
     def setup(self):
         """
         Setup all joints
+        
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
         """
         logger.info("Setup routine")
         for joint in self.all_joints.values():
@@ -62,6 +70,14 @@ class Robot():
     def go_home(self):
         """
         Homing routine
+        
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
         """
         logger.info("Doing homing routine")
         self.move2(x=self.cartesian_0["x"],
@@ -76,15 +92,19 @@ class Robot():
         """
         Move to cartesian target position
 
-        Parameters:
+        Parameters
         ----------
-        x : x position
-        y : z position
-        z : z position
-        mode : to use an specific mode (not implemented yet)
+        x : float
+            x position
+        y : float 
+            z position
+        z : float
+            z position
+        mode : str 
+            to use an specific mode (not implemented yet)
 
-        Returns:
-        --------
+        Returns
+        -------
         None
         """
         logger.info("Moving to position x: %.2f, y: %.2f, z: %.2f in %s mode",
