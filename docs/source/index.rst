@@ -12,6 +12,7 @@ Welcome to SCARA Robot's documentation!
 
    introduction
    usage
+   scara
 
 
 
