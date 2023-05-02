@@ -31,6 +31,6 @@ setup(
         "Development Status :: 2 - Pre-Alpha",
         "Natural Language :: English",
         "Operating System :: OS Independent",
-        "Topic :: Scientific/Engineeringi"
+        "Topic :: Scientific/Engineering"
         ]
 )
