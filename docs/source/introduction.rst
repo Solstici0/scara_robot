@@ -2,7 +2,7 @@ Introduction
 ============
 
 .. image:: img/scara_open.jpg
-  :width: 400i
+  :width: 400
   :alt: SCARA robot
 
 .. todo::
