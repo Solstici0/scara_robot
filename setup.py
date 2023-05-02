@@ -32,4 +32,5 @@ setup(
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineeringi"
+        ]
 )
