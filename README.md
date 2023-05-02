@@ -1,4 +1,6 @@
 # SCARA
+[![Documentation Status](https://readthedocs.org/projects/scara-robot/badge/?version=latest)](https://scara-robot.readthedocs.io/en/latest/?badge=latest)
+
 A python library and documentation to interact with Solsticio's Selective 
 Compliance Articulated Robot Arm
 
