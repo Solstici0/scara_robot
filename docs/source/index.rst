@@ -6,6 +6,11 @@
 Welcome to SCARA Robot's documentation!
 =======================================
 
+.. image:: img/nelen.jpg
+  :width: 200
+  :align: center
+  :alt: SCARA robot
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
