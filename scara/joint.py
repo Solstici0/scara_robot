@@ -7,8 +7,10 @@ import odrive
 import os
 import time
 
+#from .tools.communication
 from .tools.hardware_layer import pos2motors
 from .tools.manage_files import load_robot_config
+from .tools.fake_odrive import find_any
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +33,9 @@ class Joint():
             joints, _ = load_robot_config(self.config_path)
         else:
             joints = {}
-        #TODO axis should be an odrv.axis object or a fake one
+        # TODO axis should be an odrv.axis object or a fake one
         self.odrv_serial_num = odrv_serial_num
+        # TODO axis should be axis_name and joint should be axis
         self.axis = axis
         self.name = name
         self.pos_0 = None
