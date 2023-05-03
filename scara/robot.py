@@ -70,7 +70,8 @@ class Robot():
         None
         """
         logger.info("Setup routine")
-        for joint in self.all_joints.values():
+        #for joint in self.all_joints.values():
+        for joint in reversed(self.all_joints.values()):
             joint.j_setup()
 
     def go_home(self):
