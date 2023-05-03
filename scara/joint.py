@@ -5,6 +5,7 @@ joint.py:
 import logging
 import odrive
 import os
+import time
 
 from .tools.hardware_layer import pos2motors
 from .tools.manage_files import load_robot_config
@@ -67,15 +68,15 @@ class Joint():
         logger.info("Setup routine for %s axis", self.axis)
         while self.state == 1:
             self.joint.requested_state = 7
-            #sleep 12
+            time.sleep(12)
             self.joint.requested_state = 11
-            #sleep 15
+            time.sleep(15)
             #if self.odrv_serial_num is None:
             #    self.joint.requested_state = 2
             self.state = self.joint.current_state
             if self.state == 1:
                 logger.info("%s axis successfully what?")
-                self.joint.resquested_state = 8
+                self.joint.requested_state = 8
                 self.state = self.joint.current_state
                 if self.state == 8:
                     logger.info("%s axis successfully enters control mode",
@@ -85,7 +86,7 @@ class Joint():
                             self.name, self.joint.current_state)
                 if self.odrv_serial_num is not None:
                     dump_errors(self.odrv, True)
-                #sleep 1
+                time.sleep(1)
 
     def j_go_home(self):
         """
