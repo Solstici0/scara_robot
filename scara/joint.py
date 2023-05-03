@@ -48,7 +48,7 @@ class Joint():
             self.odrv = fake_odrive.find_any()
             self.pos_0 = 0
             self.hardware_correction = 0
-        self.joint = getattr(self.odrv, self.axis)()
+        self.joint = getattr(self.odrv, self.axis)
         # load information if joint is defined in the config file
         if self.name in [joints.keys()]:
             self.pos_0 = joints[self.name]["pos_0"]
