@@ -53,7 +53,9 @@ class Joint():
         if self.name in [joints.keys()]:
             self.pos_0 = joints[self.name]["pos_0"]
             self.hardware_correction = joints[self.name]["hardware_corrections"]
-        self.state = self.joint.current_state
+        #self.state = self.joint.current_state
+        self.state = getattr(self.joint,
+                             "current_state")
         logger.info("Axis %s instantiated as %s", self.axis, self.name)
 
     def j_setup(self):
