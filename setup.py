@@ -19,7 +19,7 @@ setup(
     name='scara',
     version='0.0.3',
     description='Solsticios Selective Compliance Articulated Robot Arm package',
-    long_description=read_description(),
+    #long_description=read_description(),
     long_description_content_type="text/markdown",
     packages=["scara"],
     install_requires=read_requirements(),
