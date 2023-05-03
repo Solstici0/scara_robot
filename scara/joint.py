@@ -44,8 +44,8 @@ class Joint():
         if self.odrv_serial_num is not None:
             self.odrv = odrive.find_any(serial_number=self.odrv_serial_num)
         else:
-            import tools.fake_odrive as fake_odrive
-            self.odrv = fake_odrive.find_any()
+            #self.odrv = fake_odrive.find_any()
+            self.odrv = find_any()
             self.pos_0 = 0
             self.hardware_correction = 0
         self.joint = getattr(self.odrv, self.axis)
