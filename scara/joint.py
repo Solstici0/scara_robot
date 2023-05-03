@@ -22,6 +22,7 @@ class Joint():
                odrv_serial_num: str,
                axis: str,
                name: str = None,
+               enable_odrv: bool = True,
                config_file: str = None):
         if config_file is not None:
             self.config_file = config_file + ".yaml"
@@ -41,8 +42,13 @@ class Joint():
         self.pos_0 = None
         self.hardware_correction = None
         # allow fake odrive for testing
-        if self.odrv_serial_num is not None:
+        if (self.odrv_serial_num is not None and
+            enable_odrv):
             self.odrv = odrive.find_any(serial_number=self.odrv_serial_num)
+            logger.info("Enable odrive %s for %s joint",
+                        self.odrv_serial_num, self.name)
+            #self.odrv = cm.get_hardware(hardware_type=,
+            #                            serial_number=self.odrv_serial_num)
         else:
             #self.odrv = fake_odrive.find_any()
             self.odrv = find_any()
