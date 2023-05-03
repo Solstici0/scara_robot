@@ -50,6 +50,7 @@ $ python
 - [ ] Include tests
   * [ ] Inverse kinematics
   * [ ] With FakeOdrv
+- [ ] Handle errors!
 
 **Mechanical** 
 - [ ] Drill octagonal plate
