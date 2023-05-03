@@ -40,7 +40,7 @@ class Joint():
         self.axis = axis
         self.name = name
         self.pos_0 = None
-        self.hardware_correction = None
+        self.hardware_correction = joints[self.name]["hardware_correction"]
         # allow fake odrive for testing
         if (self.odrv_serial_num is not None and
             enable_odrv):

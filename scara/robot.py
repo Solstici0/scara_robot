@@ -29,12 +29,18 @@ class Robot():
         # joints
         self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
                             axis=joints["hombro"]["axis"],
+                            name=joints["hombro"]["name"],
                             config_file=config_file)
+        print("giminfo!")
         self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
                           axis=joints["codo"]["axis"],
+                          name=joints["codo"]["name"],
                           config_file=config_file)
+        print("more1!!")
         self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
                        axis=joints["z"]["axis"],
+                       name=joints["z"]["name"],
+                       enable_odrv=False, # TODO FIX!!
                        config_file=config_file)
         # dict with all joints
         self.all_joints = {"hombro": self.hombro,
