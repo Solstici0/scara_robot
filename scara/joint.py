@@ -123,3 +123,9 @@ class Joint():
                         hardware_correction=self.hardware_correction)
         self.joint.controller.move_incremental(pos_increment=position_inc_corrected,
                                                from_goal_point=from_goal_point)
+
+    def dump_errors(self):
+        """
+        Recicle dump errors from odrive
+        """
+        odrive.dump_errors(self.odrv)
