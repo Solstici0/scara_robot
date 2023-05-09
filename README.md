@@ -15,6 +15,8 @@ the robot via ssh. To achieve that do:
 ``` bash
 $ ssh ubuntu@192.168.0.101 
 # password: scara_nelen
+# Then activate the nelen env (already created)
+$ source nelen/bin/activate
 ```
 
 ## Usage
