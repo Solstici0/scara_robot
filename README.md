@@ -6,6 +6,17 @@ Compliance Articulated Robot Arm
 
 You can read the SCARA robot documentation [here](https://scara-robot.readthedocs.io/en/latest/)
 
+## Connecting with the real robot
+
+If the `SCARA` network is available, you can connect with 
+the robot via ssh. To achieve that do:
+1. Connect to the SCARA netwotk. the passwor is: `rfidudes`
+2. Connect to the robot using the ssh protocol:
+``` bash
+$ ssh ubuntu@192.168.0.101 
+# password: scara_nelen
+```
+
 ## Usage
 
 You can start by creating a virtual environment and install scara package 
