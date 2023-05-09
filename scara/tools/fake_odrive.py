@@ -19,22 +19,17 @@ class FakeOdrv():
     """
     def __init__(self):
         logger.debug("init FakeOdrv")
-
-    def axis0(self):
         logger.debug("returning FakeOdrv.axis0")
-        return FakeJoint()
-
-    def axis1(self):
-        logger.debug("returning FakeOdrv.axis1")
-        return FakeJoint()
+        self.axis0 = FakeAxis()
+        self.axis1 = FakeAxis()
 
 
-class FakeJoint():
+class FakeAxis():
     """
-    FakeJoint class
+    FakeAxis class
     """
     def __init__(self, initial_state=1):
-        logger.debug("creating FakeOdrv.FakeJoint")
+        logger.debug("creating FakeOdrv.FakeAxis")
         self.requested_state = initial_state
         self.current_state = initial_state
         self.controller = FakeController()

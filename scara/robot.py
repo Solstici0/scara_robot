@@ -28,17 +28,15 @@ class Robot():
         joints, dimensions = load_robot_config(self.config_path)
         # joints
         self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
-                            axis=joints["hombro"]["axis"],
+                            axis_name=joints["hombro"]["axis_name"],
                             name=joints["hombro"]["name"],
                             config_file=config_file)
-        print("giminfo!")
         self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
-                          axis=joints["codo"]["axis"],
+                          axis_name=joints["codo"]["axis_name"],
                           name=joints["codo"]["name"],
                           config_file=config_file)
-        print("more1!!")
         self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
-                       axis=joints["z"]["axis"],
+                       axis_name=joints["z"]["axis_name"],
                        name=joints["z"]["name"],
                        enable_odrv=False, # TODO FIX!!
                        config_file=config_file)

@@ -20,7 +20,7 @@ class Joint():
     """
     def __init__(self,
                odrv_serial_num: str,
-               axis: str,
+               axis_name: str,
                name: str = None,
                enable_odrv: bool = True,
                config_file: str = None):
@@ -37,7 +37,7 @@ class Joint():
         # TODO axis should be an odrv.axis object or a fake one
         self.odrv_serial_num = odrv_serial_num
         # TODO axis should be axis_name and joint should be axis
-        self.axis = axis
+        self.axis_name = axis_name
         self.name = name
         self.pos_0 = None
         self.hardware_correction = joints[self.name]["hardware_correction"]
@@ -54,15 +54,15 @@ class Joint():
             self.odrv = find_any()
             self.pos_0 = 0
             self.hardware_correction = 0
-        self.joint = getattr(self.odrv, self.axis)
+        self.axis = getattr(self.odrv, self.axis_name)
         # load information if joint is defined in the config file
         if self.name in [joints.keys()]:
             self.pos_0 = joints[self.name]["pos_0"]
             self.hardware_correction = joints[self.name]["hardware_corrections"]
-        #self.state = self.joint.current_state
-        self.state = getattr(self.joint,
+        #self.state = self.axis.current_state
+        self.state = getattr(self.axis,
                              "current_state")
-        logger.info("Axis %s instantiated as %s", self.axis, self.name)
+        logger.info("Axis %s instantiated as %s", self.axis_name, self.name)
 
     def j_setup(self):
         """
@@ -76,25 +76,25 @@ class Joint():
         -------
         None
         """
-        logger.info("Setup routine for %s axis", self.axis)
+        logger.info("Setup routine for %s axis", self.axis_name)
         while self.state == 1:
-            self.joint.requested_state = 7
+            self.axis.requested_state = 7
             time.sleep(12)
-            self.joint.requested_state = 11
+            self.axis.requested_state = 11
             time.sleep(15)
             #if self.odrv_serial_num is None:
-            #    self.joint.requested_state = 2
-            self.state = self.joint.current_state
+            #    self.axis.requested_state = 2
+            self.state = self.axis.current_state
             if self.state == 1:
                 logger.info("%s axis successfully what?")
-                self.joint.requested_state = 8
-                self.state = self.joint.current_state
+                self.axis.requested_state = 8
+                self.state = self.axis.current_state
                 if self.state == 8:
                     logger.info("%s axis successfully enters control mode",
                                 self.name)
             else:
                 logger.info("Homing failed. %s axis current state %i",
-                            self.name, self.joint.current_state)
+                            self.name, self.axis.current_state)
                 if self.odrv_serial_num is not None:
                     dump_errors(self.odrv, True)
                 time.sleep(1)
@@ -111,7 +111,7 @@ class Joint():
         -------
         None
         """
-        logger.info("Axis %s going to home position", self.axis)
+        logger.info("Axis %s going to home position", self.axis_name)
         self.j_move2(self.pos_0)
 
     def j_move2(self, position_increment: float, from_goal_point: bool =False):
@@ -129,11 +129,11 @@ class Joint():
         None
         """
         logger.info("Axis %s going to %.2f position",
-                    self.axis, position_increment)
+                    self.axis_name, position_increment)
         position_inc_corrected = pos2motors(
                         joint_position=position_increment,
                         hardware_correction=self.hardware_correction)
-        self.joint.controller.move_incremental(pos_increment=position_inc_corrected,
+        self.axis.controller.move_incremental(pos_increment=position_inc_corrected,
                                                from_goal_point=from_goal_point)
 
     def dump_errors(self):
