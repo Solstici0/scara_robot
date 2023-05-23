@@ -10,11 +10,11 @@ You can read the SCARA robot documentation [here](https://scara-robot.readthedoc
 
 If the `SCARA` network is available, you can connect with 
 the robot via ssh. To achieve that do:
-1. Connect to the SCARA netwotk. the passwor is: `rfidudes`
+1. Connect to the SCARA netwotk. the password is: `scara_nelen`
 2. Connect to the robot using the ssh protocol:
 ``` bash
 $ ssh ubuntu@192.168.0.101 
-# password: scara_nelen
+# password: rfidudes 
 # Then activate the nelen env (already created)
 $ source nelen/bin/activate
 ```
