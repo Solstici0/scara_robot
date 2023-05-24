@@ -56,9 +56,12 @@ class Joint():
             self.hardware_correction = 0
         self.axis = getattr(self.odrv, self.axis_name)
         # load information if joint is defined in the config file
-        if self.name in [joints.keys()]:
+        if self.name in joints.keys():
             self.pos_0 = joints[self.name]["pos_0"]
-            self.hardware_correction = joints[self.name]["hardware_corrections"]
+            self.hardware_correction = joints[self.name]["hardware_correction"]
+            logger.debug("Joint %s in joints.keys()", self.name)
+        else:
+            logger.debug("Joint %s NOT in joints.keys()", self.name)
         #self.state = self.axis.current_state
         self.state = getattr(self.axis,
                              "current_state")
