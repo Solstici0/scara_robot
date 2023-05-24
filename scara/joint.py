@@ -138,9 +138,10 @@ class Joint():
         position_inc_corrected = pos2motors(
                         joint_position=position_increment,
                         hardware_correction=self.hardware_correction)
-        self.axis.controller.move_incremental(pos_increment=position_inc_corrected,
-                                               from_goal_point=from_goal_point)
+        self.axis.controller.move_incremental(position_inc_corrected,
+                                                from_goal_point)
 
+    # include property
     def dump_errors(self):
         """
         Recicle dump errors from odrive
