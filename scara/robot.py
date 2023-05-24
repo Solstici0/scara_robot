@@ -27,19 +27,21 @@ class Robot():
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
         # joints
+        self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
+                       axis_name=joints["z"]["axis_name"],
+                       name=joints["z"]["name"],
+                       config_file=config_file
+                       )
+        self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
+                          axis_name=joints["codo"]["axis_name"],
+                          name=joints["codo"]["name"],
+                          enable_odrv=False, # TODO FIX by creating a singleton for odrv init
+                          config_file=config_file,
+                          odrv=self.z.odrv)
         self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
                             axis_name=joints["hombro"]["axis_name"],
                             name=joints["hombro"]["name"],
                             config_file=config_file)
-        self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
-                          axis_name=joints["codo"]["axis_name"],
-                          name=joints["codo"]["name"],
-                          config_file=config_file)
-        self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
-                       axis_name=joints["z"]["axis_name"],
-                       name=joints["z"]["name"],
-                       enable_odrv=False, # TODO FIX by creating a singleton for odrv init
-                       config_file=config_file)
         # dict with all joints
         self.all_joints = {"hombro": self.hombro,
                            "codo": self.codo,
