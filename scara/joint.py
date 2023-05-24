@@ -99,7 +99,9 @@ class Joint():
                 logger.info("Homing failed. %s axis current state %i",
                             self.name, self.axis.current_state)
                 if self.odrv_serial_num is not None:
-                    dump_errors(self.odrv, True)
+                    pass
+                    #self.dump_errors(self.odrv, True)
+                    #odrive.dump_errors(self.odrv, True)
                 time.sleep(1)
 
     def j_go_home(self):
