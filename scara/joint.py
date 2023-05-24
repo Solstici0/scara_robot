@@ -88,6 +88,8 @@ class Joint():
         None
         """
         logger.info("Setup routine for %s axis", self.axis_name)
+        # FIX: improve rutine below including 
+        # logic for retry
         while self.state == 1:
             self.axis.requested_state = 7
             time.sleep(12)
