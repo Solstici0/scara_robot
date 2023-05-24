@@ -38,7 +38,7 @@ class Robot():
         self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
                        axis_name=joints["z"]["axis_name"],
                        name=joints["z"]["name"],
-                       enable_odrv=False, # TODO FIX!!
+                       enable_odrv=False, # TODO FIX by creating a singleton for odrv init
                        config_file=config_file)
         # dict with all joints
         self.all_joints = {"hombro": self.hombro,
