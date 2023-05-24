@@ -89,7 +89,7 @@ class Joint():
             #    self.axis.requested_state = 2
             self.state = self.axis.current_state
             if self.state == 1:
-                logger.info("%s axis successfully what?")
+                logger.info("%s axis successfully what?", self.axis_name)
                 self.axis.requested_state = 8
                 self.state = self.axis.current_state
                 if self.state == 8:
