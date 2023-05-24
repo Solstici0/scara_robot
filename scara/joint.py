@@ -111,7 +111,7 @@ class Joint():
                 if self.odrv_serial_num is not None:
                     pass
                     #self.dump_errors(self.odrv, True)
-                    #odrive.dump_errors(self.odrv, True)
+                    odrive.utils.dump_errors(self.odrv, True)
                 time.sleep(1)
 
     def j_go_home(self):
