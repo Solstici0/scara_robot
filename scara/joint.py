@@ -23,7 +23,8 @@ class Joint():
                axis_name: str,
                name: str = None,
                enable_odrv: bool = True,
-               config_file: str = None):
+               config_file: str = None,
+               odrv = None):
         if config_file is not None:
             self.config_file = config_file + ".yaml"
             abs_path = os.path.dirname(__file__)
@@ -49,11 +50,18 @@ class Joint():
                         self.odrv_serial_num, self.name)
             #self.odrv = cm.get_hardware(hardware_type=,
             #                            serial_number=self.odrv_serial_num)
-        else:
+        elif (enable_odrv is not None and 
+                odrv is not None):
+            self.odrv = odrv
+            logger.info("Enable odrive %s for %s joint",
+                        self.odrv_serial_num, self.name)
+        elif self.odrv_serial_num is None:
             #self.odrv = fake_odrive.find_any()
             self.odrv = find_any()
             self.pos_0 = 0
             self.hardware_correction = 0
+        else:
+            pass
         self.axis = getattr(self.odrv, self.axis_name)
         # load information if joint is defined in the config file
         if self.name in joints.keys():
