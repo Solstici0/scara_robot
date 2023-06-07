@@ -156,4 +156,4 @@ class Joint():
         """
         Recicle dump errors from odrive
         """
-        odrive.dump_errors(self.odrv)
+        odrive.utils.dump_errors(self.odrv)
