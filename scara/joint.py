@@ -23,7 +23,8 @@ class Joint():
                axis_name: str,
                name: str = None,
                enable_odrv: bool = True,
-               config_file: str = None):
+               config_file: str = None,
+               odrv = None):
         if config_file is not None:
             self.config_file = config_file + ".yaml"
             abs_path = os.path.dirname(__file__)
@@ -49,16 +50,26 @@ class Joint():
                         self.odrv_serial_num, self.name)
             #self.odrv = cm.get_hardware(hardware_type=,
             #                            serial_number=self.odrv_serial_num)
-        else:
+        elif (enable_odrv is not None and 
+                odrv is not None):
+            self.odrv = odrv
+            logger.info("Enable odrive %s for %s joint",
+                        self.odrv_serial_num, self.name)
+        elif self.odrv_serial_num is None:
             #self.odrv = fake_odrive.find_any()
             self.odrv = find_any()
             self.pos_0 = 0
             self.hardware_correction = 0
+        else:
+            pass
         self.axis = getattr(self.odrv, self.axis_name)
         # load information if joint is defined in the config file
-        if self.name in [joints.keys()]:
+        if self.name in joints.keys():
             self.pos_0 = joints[self.name]["pos_0"]
-            self.hardware_correction = joints[self.name]["hardware_corrections"]
+            self.hardware_correction = joints[self.name]["hardware_correction"]
+            logger.debug("Joint %s in joints.keys()", self.name)
+        else:
+            logger.debug("Joint %s NOT in joints.keys()", self.name)
         #self.state = self.axis.current_state
         self.state = getattr(self.axis,
                              "current_state")
@@ -77,6 +88,8 @@ class Joint():
         None
         """
         logger.info("Setup routine for %s axis", self.axis_name)
+        # FIX: improve rutine below including 
+        # logic for retry
         while self.state == 1:
             self.axis.requested_state = 7
             time.sleep(12)
@@ -86,7 +99,7 @@ class Joint():
             #    self.axis.requested_state = 2
             self.state = self.axis.current_state
             if self.state == 1:
-                logger.info("%s axis successfully what?")
+                logger.info("%s axis successfully what?", self.axis_name)
                 self.axis.requested_state = 8
                 self.state = self.axis.current_state
                 if self.state == 8:
@@ -96,7 +109,9 @@ class Joint():
                 logger.info("Homing failed. %s axis current state %i",
                             self.name, self.axis.current_state)
                 if self.odrv_serial_num is not None:
-                    dump_errors(self.odrv, True)
+                    pass
+                    #self.dump_errors(self.odrv, True)
+                    odrive.utils.dump_errors(self.odrv, True)
                 time.sleep(1)
 
     def j_go_home(self):
@@ -133,11 +148,12 @@ class Joint():
         position_inc_corrected = pos2motors(
                         joint_position=position_increment,
                         hardware_correction=self.hardware_correction)
-        self.axis.controller.move_incremental(pos_increment=position_inc_corrected,
-                                               from_goal_point=from_goal_point)
+        self.axis.controller.move_incremental(position_inc_corrected,
+                                                from_goal_point)
 
+    # include property
     def dump_errors(self):
         """
         Recicle dump errors from odrive
         """
-        odrive.dump_errors(self.odrv)
+        odrive.utils.dump_errors(self.odrv)
