@@ -1,20 +1,20 @@
 joints:
   hombro:
     name: "hombro"
-    odrv_serial_num: "206E3591524B"
-    axis: "axis0"
+    odrv_serial_num: #"206E3591524B"
+    axis_name: "axis0"
     pos_0: 0 # TODO CHECK!!
     hardware_correction: 1.1141  # 7/(2*pi')
   codo:
     name: "codo"
-    odrv_serial_num: "207135A1524B"
-    axis: "axis1"
+    odrv_serial_num: #"207135A1524B"
+    axis_name: "axis1"
     pos_0: 0 # TODO CHECK!!
     hardware_correction: 1.1141  # 7/(2*pi')
   z:
     name: "z"
-    odrv_serial_num: "207135A1524B"
-    axis: "axis0"
+    odrv_serial_num: #"207135A1524B"
+    axis_name: "axis0"
     pos_0: 0 # TODO CHECK!!
     hardware_correction: 0.0625  # 1/16
 dimensions:
