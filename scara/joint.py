@@ -8,13 +8,106 @@ import os
 import time
 
 #from .tools.communication
+from .hardware import Hardware
 from .tools.hardware_layer import pos2motors
 from .tools.manage_files import load_robot_config
 from .tools.fake_odrive import find_any
 
 logger = logging.getLogger(__name__)
 
+
 class Joint():
+    """
+    Joint class
+    """
+    def __init__(self,
+               hardware: Hardware,
+               name: str = None,
+               config_file: str = None):
+        self.hardware = hardware
+        self.name = name
+        if config_file is not None:
+            self.config_file = config_file + ".yaml"
+            abs_path = os.path.dirname(__file__)
+            self.config_path = os.path.join(abs_path,
+                                            "config",
+                                            self.config_file)
+            # load configuration
+            joints, _ = load_robot_config(self.config_path)
+        else:
+            joints = {}
+        # load information if joint is defined in the config file
+        if self.name in joints.keys():
+            self.pos_0 = joints[self.name]["pos_0"]
+            self.hardware_correction = joints[self.name]["hardware_correction"]
+            logger.debug("Joint %s in joints.keys()", self.name)
+        else:
+            self.pos_0 = 0
+            self.hardware_correction = 0
+            logger.debug("Joint %s NOT in joints.keys()", self.name)
+        self.is_initialized = True
+        logger.info("Joint %s instantiated", self.name)
+
+    def joint_setup(self):
+        """
+        Setup routine for joints
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+        logger.info("Setup routine for %s Joint", self.name)
+        self.hardware.setup_routine()
+
+    def joint_go_home(self):
+        """
+        Homing routine for joints
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+        logger.info("Joint %s going to home position", self.name)
+        self.joint_move2(self.pos_0)
+
+    def joint_move2(self, position_increment: float, from_goal_point: bool =False):
+        """
+        Move joint to target position
+
+        Parameters
+        ----------
+        position_increment : float
+            incremental position from current position
+        from_goal_point : bool
+
+        Returns
+        -------
+        None
+        """
+        logger.info("Joint %s going to %.2f position",
+                    self.name, position_increment)
+        position_inc_corrected = pos2motors(
+                        joint_position=position_increment,
+                        hardware_correction=self.hardware_correction)
+        self.hardware.move2_routine(position_inc_corrected, from_goal_point)
+
+    # include property
+    def get_errors(self):
+        """
+        Recicle dump errors from odrive
+        """
+        self.hardware.get_errors_routine()
+
+
+class Joint_1():
     """
     Joint class
     """

@@ -6,6 +6,7 @@ import logging
 import os
 
 from .joint import Joint
+from .hardware import Hardware
 from .tools.inverse_kinematic import inverse_kinematic
 #from .tools.a_interaction import a_interaction
 from .tools.manage_files import load_robot_config
@@ -27,35 +28,51 @@ class Robot():
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
         # joints
-        self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
-                       axis_name=joints["z"]["axis_name"],
+        self.z_hw = Hardware()
+        self.z = Joint(#odrv_serial_num=joints["z"]["odrv_serial_num"],
+                       #axis_name=joints["z"]["axis_name"],
+                       hardware=self.z_hw,
                        name=joints["z"]["name"],
                        config_file=config_file
                        )
-        self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
-                          axis_name=joints["codo"]["axis_name"],
+        self.codo_hw = Hardware()
+        self.codo = Joint(#odrv_serial_num=joints["codo"]["odrv_serial_num"],
+                          #axis_name=joints["codo"]["axis_name"],
+                          hardware=self.codo_hw,
                           name=joints["codo"]["name"],
-                          enable_odrv=False, # TODO FIX by creating a singleton for odrv init
+                          #enable_odrv=False, # TODO FIX by creating a singleton for odrv init
                           config_file=config_file,
-                          odrv=self.z.odrv)
-        self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
-                            axis_name=joints["hombro"]["axis_name"],
+                          #odrv=self.z.odrv
+                          )
+        self.hombro_hw = Hardware()
+        self.hombro = Joint(#odrv_serial_num=joints["hombro"]["odrv_serial_num"],
+                            #axis_name=joints["hombro"]["axis_name"],
+                            hardware=self.hombro_hw,
                             name=joints["hombro"]["name"],
                             config_file=config_file)
+        self.a_hw = Hardware()
+        self.a = Joint(hardware=self.a_hw,
+                       name="a")
         # dict with all joints
         self.all_joints = {"hombro": self.hombro,
                            "codo": self.codo,
-                           "z": self.z}
+                           "z": self.z,
+                           "a": self.a
+                           }
         # dict with all home position per joint (joint's zero, not cartesian)
         self.all_pos_0 = {"hombro": self.hombro.pos_0,
                           "codo": self.codo.pos_0,
-                          "z": self.z.pos_0}
+                          "z": self.z.pos_0,
+                          "a": 0
+                          }
         self.h_len = dimensions["humero_len"]
         self.rc_len = dimensions["radio_cubito_len"]
         self.max_hombro_degree = dimensions["max_hombro_degree"]
         self.max_codo_degree = dimensions["max_codo_degree"]
         self.cartesian_0 = dimensions["cartesian_0"]
         self.orientation = dimensions["orientation"]
+        self.is_initialized = True
+        self.is_setted_up = False
 
     def setup(self):
         """
@@ -72,7 +89,8 @@ class Robot():
         logger.info("Setup routine")
         #for joint in self.all_joints.values():
         for joint in reversed(self.all_joints.values()):
-            joint.j_setup()
+            joint.joint_setup()
+        self.is_setted_up = True
 
     def go_home(self):
         """
@@ -95,6 +113,7 @@ class Robot():
             x: float,
             y: float,
             z: float,
+            a: float = 0,
             mode: str = None):
         """
         Move to cartesian target position
@@ -107,6 +126,8 @@ class Robot():
             z position
         z : float
             z position
+        a : float
+            a position
         mode : str 
             to use an specific mode (not implemented yet)
 
@@ -118,6 +139,7 @@ class Robot():
                     x,
                     y,
                     z,
+                    a,
                     mode)
         # given x,y position calculate hombro and codo angles using
         # inverse kinametic
@@ -129,8 +151,11 @@ class Robot():
                                    max_codo_degree=self.max_codo_degree,
                                    orientation=self.orientation
                                    )
-        all_pos = {"hombro": angles["hombro"], "codo": angles["codo"], "z": z}
+        all_pos = {"hombro": angles["hombro"],
+                   "codo": angles["codo"],
+                   "z": z,
+                   "a": a}
         for joint_name, joint in self.all_joints.items():
             pos_from_0 = all_pos[joint_name] - self.all_pos_0[joint_name]
-            joint.j_move2(position_increment=pos_from_0,
+            joint.joint_move2(position_increment=pos_from_0,
                           from_goal_point=False)
