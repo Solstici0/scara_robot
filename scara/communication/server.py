@@ -6,6 +6,7 @@ import logging
 import socket
 
 from . import commands
+#import commands
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class Server():
         logger.info("starting server")
         self.server.bind(self.addr)
         self.server.listen()
+        self.conn, self.addr = self.server.accept()
         self.is_connected = True
 
 
@@ -46,20 +48,27 @@ class Server():
 
     def check_for_disconnect(self, msg):
         if msg == commands.DISCONNECT_MESSAGE.encode(commands.FORMAT):
+            self.conn.close()
+            self.server.close()
             self.is_connected = False
+            logger.info("connection closed")
 
-    def handle_client(self):
-        self.conn, self.addr = self.server.accept()
+
+    def handle_client_once(self):
         logger.debug("handling client with address %s", self.addr)
+        msg_encode = self.receive()
+        self.send(msg_encode)
+        self.check_for_disconnect(msg_encode)
+        return msg_encode.decode(commands.FORMAT)
+
+
+    def handle_client_continuously(self):
         while self.is_connected:
-            msg_encode = self.receive()
-            self.check_for_disconnect(msg_encode)
-            self.send(msg_encode)
-        self.conn.close()
+            self.handle_client_once()
 
 
 if __name__ == "__main__":
-    server = Server(ip="127.0.0.1", port=1026)
+    server = Server(ip="127.0.0.1", port=1025)
     server.start()
     while server.is_connected:
-        server.handle_client()
+        server.handle_client_once()
