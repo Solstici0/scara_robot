@@ -7,4 +7,5 @@ logging_handler.setFormatter(
         "[log] %(asctime)s - %(name)s:%(lineno)s - %(levelname)s - %(message)s"
     )
 )
+logger.setLevel(logging.DEBUG)
 logger.addHandler(logging_handler)
