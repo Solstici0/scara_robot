@@ -3,7 +3,5 @@ from .joint import Joint
 from .hardware import Hardware
 from .logger import logger
 from . import tools
-#from . import communication
-from .communication.server import Server
-from .communication.client import Client
-from .communication.communication_interfase import CommunicationInterfase
+from . import robot_tools
+from . import communication
