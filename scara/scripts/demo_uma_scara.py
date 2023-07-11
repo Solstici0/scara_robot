@@ -158,7 +158,7 @@ if __name__ == "__main__":
         pass
         # Server.start()
 
-    scara.logger.setLevel(args.verbose)
+    logger.setLevel(args.verbose)
     nelen = scara.Robot()
     # skip umas or otyher functions
     skip = []
