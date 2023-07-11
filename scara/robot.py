@@ -122,20 +122,20 @@ class Robot():
         ----------
         x : float
             x position
-        y : float 
+        y : float
             z position
         z : float
             z position
         a : float
             a position
-        mode : str 
+        mode : str
             to use an specific mode (not implemented yet)
 
         Returns
         -------
         None
         """
-        logger.info("Moving to position x: %.2f, y: %.2f, z: %.2f in %s mode",
+        logger.info("Moving to position x: %.2f, y: %.2f, z: %.2f, a: %.2f in %s mode",
                     x,
                     y,
                     z,
