@@ -7,11 +7,10 @@ import odrive
 import os
 import time
 
-#from .tools.communication
 from .hardware import Hardware
-from .tools.hardware_layer import pos2motors
+from .robot_tools.hardware_layer import pos2motors
 from .tools.manage_files import load_robot_config
-from .tools.fake_odrive import find_any
+#from .tools.fake_odrive import find_any
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +47,7 @@ class Joint():
         self.is_initialized = True
         logger.info("Joint %s instantiated", self.name)
 
+
     def joint_setup(self):
         """
         Setup routine for joints
@@ -63,6 +63,7 @@ class Joint():
         logger.info("Setup routine for %s Joint", self.name)
         self.hardware.setup_routine()
 
+
     def joint_go_home(self):
         """
         Homing routine for joints
@@ -77,6 +78,7 @@ class Joint():
         """
         logger.info("Joint %s going to home position", self.name)
         self.joint_move2(self.pos_0)
+
 
     def joint_move2(self, position_increment: float, from_goal_point: bool =False):
         """
@@ -98,6 +100,7 @@ class Joint():
                         joint_position=position_increment,
                         hardware_correction=self.hardware_correction)
         self.hardware.move2_routine(position_inc_corrected, from_goal_point)
+
 
     # include property
     def get_errors(self):
@@ -221,6 +224,7 @@ class Joint_1():
         """
         logger.info("Axis %s going to home position", self.axis_name)
         self.j_move2(self.pos_0)
+
 
     def j_move2(self, position_increment: float, from_goal_point: bool =False):
         """

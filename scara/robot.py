@@ -7,8 +7,7 @@ import os
 
 from .joint import Joint
 from .hardware import Hardware
-from .tools.inverse_kinematic import inverse_kinematic
-#from .tools.a_interaction import a_interaction
+from .robot_tools.inverse_kinematic import inverse_kinematic
 from .tools.manage_files import load_robot_config
 
 logger = logging.getLogger(__name__)
@@ -18,24 +17,33 @@ class Robot():
     Robot class
     """
     def __init__(self,
-               config_file: str = "default"):
+               config_file: str = "default",
+               hombro_hw : Hardware = Hardware(),
+               codo_hw : Hardware = Hardware(),
+               z_hw : Hardware = Hardware(),
+               a_hw : Hardware = Hardware(),
+               ):
         logger.info("Initializing SCARA robot")
         self.config_file = config_file + ".yaml"
         abs_path = os.path.dirname(__file__)
         self.config_path = os.path.join(abs_path,
                                         "config",
                                         self.config_file)
+        self.hombro_hw = hombro_hw
+        self.codo_hw = codo_hw
+        self.z_hw = z_hw
+        self.a_hw = a_hw
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
         # joints
-        self.z_hw = Hardware()
+        #self.z_hw = Hardware()
         self.z = Joint(#odrv_serial_num=joints["z"]["odrv_serial_num"],
                        #axis_name=joints["z"]["axis_name"],
                        hardware=self.z_hw,
                        name=joints["z"]["name"],
                        config_file=config_file
                        )
-        self.codo_hw = Hardware()
+        #self.codo_hw = Hardware()
         self.codo = Joint(#odrv_serial_num=joints["codo"]["odrv_serial_num"],
                           #axis_name=joints["codo"]["axis_name"],
                           hardware=self.codo_hw,
@@ -44,13 +52,13 @@ class Robot():
                           config_file=config_file,
                           #odrv=self.z.odrv
                           )
-        self.hombro_hw = Hardware()
+        #self.hombro_hw = Hardware()
         self.hombro = Joint(#odrv_serial_num=joints["hombro"]["odrv_serial_num"],
                             #axis_name=joints["hombro"]["axis_name"],
                             hardware=self.hombro_hw,
                             name=joints["hombro"]["name"],
                             config_file=config_file)
-        self.a_hw = Hardware()
+        #self.a_hw = Hardware()
         self.a = Joint(hardware=self.a_hw,
                        name="a")
         # dict with all joints
@@ -63,7 +71,7 @@ class Robot():
         self.all_pos_0 = {"hombro": self.hombro.pos_0,
                           "codo": self.codo.pos_0,
                           "z": self.z.pos_0,
-                          "a": 0
+                          "a": self.a.pos_0
                           }
         self.h_len = dimensions["humero_len"]
         self.rc_len = dimensions["radio_cubito_len"]
@@ -73,6 +81,7 @@ class Robot():
         self.orientation = dimensions["orientation"]
         self.is_initialized = True
         self.is_setted_up = False
+
 
     def setup(self):
         """
@@ -87,10 +96,10 @@ class Robot():
         None
         """
         logger.info("Setup routine")
-        #for joint in self.all_joints.values():
         for joint in reversed(self.all_joints.values()):
             joint.joint_setup()
         self.is_setted_up = True
+
 
     def go_home(self):
         """
@@ -108,6 +117,7 @@ class Robot():
         self.move2(x=self.cartesian_0["x"],
                    y=self.cartesian_0["y"],
                    z=self.cartesian_0["z"])
+
 
     def move2(self,
             x: float,
@@ -159,3 +169,13 @@ class Robot():
             pos_from_0 = all_pos[joint_name] - self.all_pos_0[joint_name]
             joint.joint_move2(position_increment=pos_from_0,
                           from_goal_point=False)
+
+
+    def get_errors():
+        logger.info("Getting robot error's state")
+        pass
+
+
+    def clear_error():
+        logger.info("Clearing robot error's state")
+        pass
