@@ -9,7 +9,7 @@ from .joint import Joint
 from .tools.inverse_kinematic import inverse_kinematic
 #from .tools.a_interaction import a_interaction
 from .tools.manage_files import load_robot_config
-
+import scara.tools.kinematics as kin
 logger = logging.getLogger(__name__)
 
 class Robot():
@@ -26,6 +26,8 @@ class Robot():
                                         self.config_file)
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
+        self.config.joints = joints
+        self.config.dimensions = dimensions
         # joints
         self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
                        axis_name=joints["z"]["axis_name"],
@@ -134,3 +136,21 @@ class Robot():
             pos_from_0 = all_pos[joint_name] - self.all_pos_0[joint_name]
             joint.j_move2(position_increment=pos_from_0,
                           from_goal_point=False)
+    def move(self,
+             x: float,
+             y: float,
+             z: float,
+             orientation : str = "right"):
+        """
+        Moves the robot to the desired position in cartesians.
+        
+        """
+        new_radians = kin.inverse_kin(x,y,orientation)
+        new_turns = {"hombro" : new_radians["hombro"]*self.hombro.hardware_correction,
+                     "codo": new_radians["codo"]*self.codo.hardware_correction,
+                     "z": z*self.z.hardware_correction}
+        self.hombro.j_move_abs(new_turns["hombro"])
+        self.codo.j_move_abs(new_turns["codo"])
+        self.z.j_move_abs(new_turns["z"])
+
+        
