@@ -150,6 +150,23 @@ class Joint():
                         hardware_correction=self.hardware_correction)
         self.axis.controller.move_incremental(position_inc_corrected,
                                                 from_goal_point)
+    
+    def j_move_abs(self,new_target : float):
+        """
+        Updates the target position of the odrive controller, this results
+        in an absolute movement in turns.
+
+        parameters:
+        -----------
+        -new_target (float): new target for the controller, in turns respect
+        of the 0 position
+
+        returns:
+        --------
+        -int : the state of the function, 0 if succesfull
+        """
+        self.axis.controller.input_pos = new_target
+        return 0
 
     # include property
     def dump_errors(self):
