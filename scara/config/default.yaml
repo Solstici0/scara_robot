@@ -18,10 +18,12 @@ joints:
     pos_0: 0 # TODO CHECK!!
     hardware_correction: 0.0625  # 1/16
 dimensions:
-  humero_len: 336.15
-  radio_cubito_len: 338.0
-  max_hombro_degree: 1.5708  # 90/180*pi
-  max_codo_degree: 2.356125  # 135/180*pi
+  humero_len: 330.15
+  radio_cubito_len: 336.0
+  max_hombro_degree: 1.5708  # 90/180*pi 
+                             # the limit is calculated as [0, 2*max_hombro_degree]
+  max_codo_degree: 2.356125  # 135/180*pi 
+                             # the limit is calculated as [-max_codo_degree, max_codo_degree]
   cartesian_0:  # x, y, z for home position
     x: 0  # x
     y: 0  # y
