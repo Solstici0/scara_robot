@@ -26,8 +26,6 @@ class Robot():
                                         self.config_file)
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
-        self.config.joints = joints
-        self.config.dimensions = dimensions
         # joints
         self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
                        axis_name=joints["z"]["axis_name"],
