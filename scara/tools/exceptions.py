@@ -45,7 +45,7 @@ def timeout_except(axis, odrive_state_code,state_timeout=default_timeouts):
     """
     init_time = time.clock_gettime(1)
 
-    while axis.requested_state == odrive_state_code:
+    while axis.current_state == odrive_state_code:
         if  time.clock_gettime(1)- init_time >= state_timeout:
             raise Exception('timeout in ' + odrive_state[odrive_state_code])
     return True

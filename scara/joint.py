@@ -96,13 +96,14 @@ class Joint():
         self.axis.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION
         time.sleep(0.2)
         exceptions.raise_except(self.axis,AXIS_STATE_ENCODER_OFFSET_CALIBRATION) #exception if unable to enter requested state
-        exceptions.timeout_except(self.axis,AXIS_STATE_ENCODER_OFFSET_CALIBRATION) #exception if time out and still in the same state
         logger.info('succesfully entered AXIS_STATE_ENCODER_OFFSET_CALIBRATION')  
-        
+        exceptions.timeout_except(self.axis,AXIS_STATE_ENCODER_OFFSET_CALIBRATION) #exception if time out and still in the same state
+        logger.info('got out of AXIS_STATE_ENCODER_OFFSET_CALIBRATION')
         #execute homing
         self.axis.requested_state = AXIS_STATE_HOMING 
         time.sleep(0.2)
         exceptions.raise_except(self.axis,AXIS_STATE_HOMING) #exception if unable to enter requested state
+        logger.info('succesfully entered AXIS_STATE_HOMING')  
         exceptions.timeout_except(self.axis,AXIS_STATE_HOMING)  #exception if time out and still in the same state
         logger.info('Current axis successfully homed')
         
