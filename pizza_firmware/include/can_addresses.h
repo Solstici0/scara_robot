@@ -1,0 +1,10 @@
+#define CAN_BUS_SPEED 500E3
+#define CAN_SELF_ID 0x694
+
+enum PIZZA_FUNCTIONS{
+    MOVE_A,
+    MOVE_SERVO,
+    DIGITAL_OUTPUT,
+};
+
+#define IS_WRITING_MASK 1<<7
