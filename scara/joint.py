@@ -171,8 +171,12 @@ class Joint():
         return 0
 
     # include property
-    def dump_errors(self):
+    def dump_errors(self,argument = None):
         """
         Recicle dump errors from odrive
         """
-        odrive.utils.dump_errors(self.odrv)
+        if argument:
+            odrive.utils.dump_errors(self.odrv,argument)
+        else:
+            odrive.utils.dump_errors(self.odrv)
+
