@@ -77,7 +77,7 @@ class Joint():
                              "current_state")
         logger.info("Axis %s instantiated as %s", self.axis_name, self.name)
 
-    def j_setup(self):
+    def j_setup(self,startup_position = None):
         """
         Setup routine for joints
         
@@ -112,6 +112,8 @@ class Joint():
         time.sleep(0.2)
         exceptions.raise_except(self.axis, AXIS_STATE_CLOSED_LOOP_CONTROL) #exception if unable to enter requested state
         logger.info('Current axis successfully enters control mod3')
+        if startup_position:
+            self.axis.controller.input_pos = startup_position
 
         
     def j_go_home(self):
