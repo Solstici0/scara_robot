@@ -15,7 +15,7 @@ joints:
     name: "z"
     odrv_serial_num: "335D31583536"
     axis_name: "axis0"
-    pos_0_in_turns: -11.625 # TODO CHECK!!
+    pos_0_in_turns: -11.25 # TODO CHECK!!
     hardware_correction: -0.0625  # 1/16
 dimensions:
   humero_len: 330.15
