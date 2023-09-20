@@ -72,9 +72,8 @@ class Robot():
         logger.info("Setup routine")
         #for joint in self.all_joints.values():
         for joint in reversed(self.all_joints.values()):
-            if joint.name == 'z':
-                #TODO: move this magic number elsewhere
-                joint.j_setup(11.25) #this corresponds to 180mm this is z close to its upper ls
+            if joint.pos_0_in_turns:
+                joint.j_setup(joint.pos_0_in_turns)
             else:
                 joint.j_setup()
 

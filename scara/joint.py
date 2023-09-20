@@ -67,7 +67,7 @@ class Joint():
         self.axis = getattr(self.odrv, self.axis_name)
         # load information if joint is defined in the config file
         if self.name in joints.keys():
-            self.pos_0 = joints[self.name]["pos_0"]
+            self.pos_0_in_turns = joints[self.name]["pos_0_in_turns"]
             self.hardware_correction = joints[self.name]["hardware_correction"]
             logger.debug("Joint %s in joints.keys()", self.name)
         else:
@@ -113,7 +113,7 @@ class Joint():
         exceptions.raise_except(self.axis, AXIS_STATE_CLOSED_LOOP_CONTROL) #exception if unable to enter requested state
         logger.info('Current axis successfully enters control mod3')
         if startup_position:
-            self.axis.controller.input_pos = startup_position
+            self.j_move_abs(startup_position)
 
         
     def j_go_home(self):
@@ -167,7 +167,10 @@ class Joint():
         --------
         -int : the state of the function, 0 if succesfull
         """
-        self.axis.controller.input_pos = new_target
+        logger.info("%s axis setpoint will change to %f",self.axis_name,new_target)
+        answer = input('do you accept the new position? type YES\n')
+        if answer == 'YES':
+             self.axis.controller.input_pos = new_target
         return 0
 
     # include property
