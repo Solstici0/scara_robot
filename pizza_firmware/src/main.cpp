@@ -2,13 +2,14 @@
 #include <SPI.h>
 #include "can_comms.h"
 #include "stepper_motors.cpp"
+#include "can_addresses.h"
 // put function declarations here:
 int myFunction(int, int);
 
 void setup() {
   // put your setup code here, to run once:
   steppers::setup();
-  can::init();
+  can::init(CAN_SELF_ID);
 }
 
 void loop() {
@@ -18,9 +19,4 @@ void loop() {
     can::decide(can::buffer,message_size);
     }
   steppers::run_steppers();
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
 }

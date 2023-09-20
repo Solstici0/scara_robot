@@ -1,42 +1,31 @@
 #include "can_comms.h"
-#include <MCP2515.h>
-#include "stepper_motors.cpp"
-#include "digital_output.cpp"
 #include "can_addresses.h"
+#include <MCP2515.h>
+#include "digital_output.h"
+#include "stepper_motors.h"
 
 using namespace can;
 
-void init(){
-    if (!CAN.begin(CAN_BUS_SPEED)) {
+void can::init(uint16_t address){
+
+    if (!CAN.begin(500E3)) {
         Serial.println("Starting CAN failed!");
         while (1);
     }
+    CAN.filter(address);
 }
+
+int check_for_messages(){
+    return CAN.parsePacket();
+}
+
 void decide(uint8_t buffer[], uint8_t size){
-    for (int i=0;i<size;i++){
-        buffer[i] = CAN.read();
-    }
-    bool is_writing = buffer[0]&IS_WRITING_MASK;
-    uint8_t function = buffer[0] & (IS_WRITING_MASK-1);
 
-    switch (function)
-    {
-    case MOVE_A:
-        int steps = buffer[2]+(buffer[3]<<8);
-        steppers::move_function(is_writing,buffer[1],steps);
-        break;
-    case MOVE_SERVO:
-        break;
-    case DIGITAL_OUTPUT:
-
-        break;
-    default:
-        break;
-    }
+    bool is_writing  = buffer[0] & IS_WRITING_MASK;
+    uint8_t function = buffer[0] & FUNCTION_MASK;
+    uint8_t actuator = buffer[0] & ACTUATOR_MASK;
     
-    if (buffer[0]==69){
-        steppers::move_function(true,0,buffer[1]+buffer[2]<<8);
-    }
-
+    
+    
 }
-int check_for_messages();
+
