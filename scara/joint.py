@@ -167,7 +167,7 @@ class Joint():
         --------
         -int : the state of the function, 0 if succesfull
         """
-        logger.info("%s axis setpoint will change to %f",self.axis_name,new_target)
+        logger.info("%s axis setpoint will change to %f",self.name,new_target)
         answer = input('do you accept the new position? type YES\n')
         if answer == 'YES':
              self.axis.controller.input_pos = new_target
