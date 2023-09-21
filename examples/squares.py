@@ -22,7 +22,7 @@ all_vertex = [vertex_1, vertex_2, vertex_3, vertex_4]
 def square_movement():
     for square_num in range(n_squares):
         for vertex in all_vertex:
-            scara.move(vertex[0], vertex[1], vertex[2])
+            nelen.move(vertex[0], vertex[1], vertex[2])
             input()
 
 if __name__ == '__main__':
