@@ -1,6 +1,6 @@
 """
 WARNING : this script should only work if the machine is already initialized
-and if ther is no other terminal wwith an initialized object of the scara robot
+and if there is no other terminal with an initialized object of the scara robot
 """
 import logging
 import time
