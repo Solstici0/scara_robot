@@ -1,3 +1,7 @@
+"""
+WARNING : this script should only work if the machine is already initialized
+and if ther is no other terminal wwith an initialized object of the scara robot
+"""
 import logging
 import time
 
@@ -10,12 +14,16 @@ nelen = scara.Robot()
 n_squares = 5
 # vertex defines each vertex of the square
 # vertex = [x_position, y_position, z_position]
-#vertex_1 = [500, , 0]
-#vertex_2
-#vertex_3
-#vertex_4
+vertex_1 = [-50, 400, 100]
+vertex_2 = [-50, 500, 50]
+vertex_3 = [50, 500, 150]
+vertex_4 = [50, 400, 50]
 all_vertex = [vertex_1, vertex_2, vertex_3, vertex_4]
-for square_num in range(n_squares):
-    for vertex in all_vertex:
-        scara.move2(vertex[0], vertex[1], vertex[2])
-        sleep(2)
+def square_movement():
+    for square_num in range(n_squares):
+        for vertex in all_vertex:
+            scara.move(vertex[0], vertex[1], vertex[2])
+            input()
+
+if __name__ == '__main__':
+    square_movement()
