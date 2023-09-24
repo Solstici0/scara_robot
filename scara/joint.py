@@ -11,6 +11,8 @@ import time
 from .tools.hardware_layer import pos2motors
 from .tools.manage_files import load_robot_config
 from .tools.fake_odrive import find_any
+import scara.tools.exceptions as exceptions
+from scara.tools.enums_dict import *
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +67,7 @@ class Joint():
         self.axis = getattr(self.odrv, self.axis_name)
         # load information if joint is defined in the config file
         if self.name in joints.keys():
-            self.pos_0 = joints[self.name]["pos_0"]
+            self.pos_0_in_turns = joints[self.name]["pos_0_in_turns"]
             self.hardware_correction = joints[self.name]["hardware_correction"]
             logger.debug("Joint %s in joints.keys()", self.name)
         else:
@@ -75,7 +77,7 @@ class Joint():
                              "current_state")
         logger.info("Axis %s instantiated as %s", self.axis_name, self.name)
 
-    def j_setup(self):
+    def j_setup(self,startup_position = None):
         """
         Setup routine for joints
         
@@ -90,30 +92,30 @@ class Joint():
         logger.info("Setup routine for %s axis", self.axis_name)
         # FIX: improve rutine below including 
         # logic for retry
-        while self.state == 1:
-            self.axis.requested_state = 7
-            time.sleep(12)
-            self.axis.requested_state = 11
-            time.sleep(15)
-            #if self.odrv_serial_num is None:
-            #    self.axis.requested_state = 2
-            self.state = self.axis.current_state
-            if self.state == 1:
-                logger.info("%s axis successfully what?", self.axis_name)
-                self.axis.requested_state = 8
-                self.state = self.axis.current_state
-                if self.state == 8:
-                    logger.info("%s axis successfully enters control mode",
-                                self.name)
-            else:
-                logger.info("Homing failed. %s axis current state %i",
-                            self.name, self.axis.current_state)
-                if self.odrv_serial_num is not None:
-                    pass
-                    #self.dump_errors(self.odrv, True)
-                    odrive.utils.dump_errors(self.odrv, True)
-                time.sleep(1)
 
+        self.axis.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION
+        time.sleep(0.2)
+        exceptions.raise_except(self.axis,AXIS_STATE_ENCODER_OFFSET_CALIBRATION) #exception if unable to enter requested state
+        logger.info('succesfully entered AXIS_STATE_ENCODER_OFFSET_CALIBRATION')  
+        exceptions.timeout_except(self.axis,AXIS_STATE_ENCODER_OFFSET_CALIBRATION) #exception if time out and still in the same state
+        logger.info('got out of AXIS_STATE_ENCODER_OFFSET_CALIBRATION')
+        #execute homing
+        self.axis.requested_state = AXIS_STATE_HOMING 
+        time.sleep(0.2)
+        exceptions.raise_except(self.axis,AXIS_STATE_HOMING) #exception if unable to enter requested state
+        logger.info('succesfully entered AXIS_STATE_HOMING')  
+        exceptions.timeout_except(self.axis,AXIS_STATE_HOMING)  #exception if time out and still in the same state
+        logger.info('Current axis successfully homed')
+        
+        #execute control loop
+        self.axis.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+        time.sleep(0.2)
+        exceptions.raise_except(self.axis, AXIS_STATE_CLOSED_LOOP_CONTROL) #exception if unable to enter requested state
+        logger.info('Current axis successfully enters control mod3')
+        if startup_position:
+            self.j_move_abs(startup_position)
+
+        
     def j_go_home(self):
         """
         Homing routine for joints
@@ -165,12 +167,20 @@ class Joint():
         --------
         -int : the state of the function, 0 if succesfull
         """
-        self.axis.controller.input_pos = new_target
+        logger.info("%s axis setpoint will change to %f",self.name,new_target)
+        answer = 'YES'
+        # answer = input('do you accept the new position? type YES\n')
+        if answer == 'YES':
+             self.axis.controller.input_pos = new_target
         return 0
 
     # include property
-    def dump_errors(self):
+    def dump_errors(self,argument = None):
         """
         Recicle dump errors from odrive
         """
-        odrive.utils.dump_errors(self.odrv)
+        if argument:
+            odrive.utils.dump_errors(self.odrv,argument)
+        else:
+            odrive.utils.dump_errors(self.odrv)
+

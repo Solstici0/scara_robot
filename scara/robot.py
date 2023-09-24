@@ -26,8 +26,6 @@ class Robot():
                                         self.config_file)
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
-        self.config.joints = joints
-        self.config.dimensions = dimensions
         # joints
         self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
                        axis_name=joints["z"]["axis_name"],
@@ -74,7 +72,10 @@ class Robot():
         logger.info("Setup routine")
         #for joint in self.all_joints.values():
         for joint in reversed(self.all_joints.values()):
-            joint.j_setup()
+            if joint.pos_0_in_turns:
+                joint.j_setup(joint.pos_0_in_turns)
+            else:
+                joint.j_setup()
 
     def go_home(self):
         """

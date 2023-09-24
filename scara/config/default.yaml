@@ -3,20 +3,20 @@ joints:
     name: "hombro"
     odrv_serial_num: "206E3591524B"
     axis_name: "axis0"
-    pos_0: 0 # TODO CHECK!!
-    hardware_correction: 1.1141  # 7/(2*pi')
+    pos_0_in_turns: 0 # TODO CHECK!!
+    hardware_correction: -1.1141  # 7/(2*pi')
   codo:
     name: "codo"
     odrv_serial_num: "335D31583536"
     axis_name: "axis1"
-    pos_0: 0 # TODO CHECK!!
-    hardware_correction: 1.1141  # 7/(2*pi')
+    pos_0_in_turns: 0 # TODO CHECK!!
+    hardware_correction: -1.1141  # 7/(2*pi')
   z:
     name: "z"
     odrv_serial_num: "335D31583536"
     axis_name: "axis0"
-    pos_0: 0 # TODO CHECK!!
-    hardware_correction: 0.0625  # 1/16
+    pos_0_in_turns: -11.25 # TODO CHECK!!
+    hardware_correction: -0.0625  # 1/16
 dimensions:
   humero_len: 330.15
   radio_cubito_len: 336.0
