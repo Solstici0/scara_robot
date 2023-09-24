@@ -39,12 +39,13 @@ def write(command:dict):
     can_data[1] = actuator_num
     can_data[2] = param & 0xff
     can_data[3] = param >> 8
+    filter =[{"can_id": CAN_RASPI_ID, "can_mask": 0x7FF, "extended": False},]
 
-    with can.Bus(interface='socketcan', channel='can0', bitrate=CAN_BUS_SPEED) as bus:
-        message_filter = can.Filter(arbitration_id=CAN_RASPI_ID,
-                                    extended_id=False,  # Set to True if you are using extended IDs
-                                    )
-        bus.set_filters([message_filter])
+    with can.Bus(interface='socketcan', 
+                 channel='can0',
+                 bitrate=CAN_BUS_SPEED,
+                 can_filters = filter ) as bus:
+
         msg = can.Message(
             arbitration_id=CAN_PIZZA_ID,
             data=can_data,
