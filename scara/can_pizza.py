@@ -57,7 +57,7 @@ def write(command:dict):
 
             print(f"Message sent on {bus.channel_info}")
             answer = bus.recv(timeout = PIZZA_TIMEOUT)
-            return answer.data[0]+(answer[1]<<8)
+            return answer.data[0]+(answer.data[1]<<8)
         except can.CanError:
             print("Message NOT sent")
 
