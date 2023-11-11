@@ -58,8 +58,8 @@ if __name__ == '__main__':
         while time.thread_time_ns() - this_time < period_in_ns:
             pass
         time_of_execution[i] = time.thread_time_ns()
-        nelen.move_direct(hombro_commands,
-                          codo_commands)
+        nelen.move_direct(hombro_commands[i],
+                          codo_commands[i])
         executed_position[0][i] = nelen.hombro.axis.encoder.pos_estimate
         executed_position[1][i] = nelen.codo.axis.encoder.pos_estimate
 
