@@ -153,5 +153,9 @@ class Robot():
         self.hombro.j_move_abs(new_turns["hombro"])
         self.codo.j_move_abs(new_turns["codo"])
         self.z.j_move_abs(new_turns["z"])
+    
+    def move_direct(self, turns_hombro, turns_codo):
+        self.hombro.axis.controller.input_pos = (turns_hombro)
+        self.codo.axis.controller.input_pos = (turns_codo)
 
         

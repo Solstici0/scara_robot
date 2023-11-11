@@ -370,3 +370,7 @@ dist
 build
 # Egg metadata
 *.egg-info
+
+
+# scara specifics
+data_dumps
