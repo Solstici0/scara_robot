@@ -7,7 +7,7 @@ import os
 
 from .joint import Joint
 from .tools.inverse_kinematic import inverse_kinematic
-import can_pizza as pizza
+import scara.can_pizza as pizza
 from .tools.manage_files import load_robot_config
 import scara.tools.kinematics as kin
 logger = logging.getLogger(__name__)
