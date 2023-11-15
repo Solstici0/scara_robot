@@ -64,11 +64,12 @@ def write(command:dict):
 
 
 def acceleration(new_acc=None):
-    if new_acc:
-        is_writing = 1
-    else:
+    if new_acc == None:
         is_writing = 0
         new_acc = 0
+    else:
+        is_writing = 1
+        
         
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
@@ -79,11 +80,11 @@ def acceleration(new_acc=None):
     return write(msg)
 
 def speed(new_speed=None):
-    if new_speed:
-        is_writing = 1
-    else:
+    if new_speed == None:
         is_writing = 0
         new_speed = 0
+    else:
+        is_writing = 1
         
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
@@ -93,11 +94,12 @@ def speed(new_speed=None):
     return write(msg)
 
 def solenoid(new_state=None):
-    if new_state:
-        is_writing = 1
-    else:
+    if new_state==None:
         is_writing = 0
         new_state = 0
+    else:
+        is_writing = 1
+
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['DIGITAL_OUTPUT'],
             'FUNCTION': PIZZA_FUNCTIONS['STATE'],
@@ -105,25 +107,28 @@ def solenoid(new_state=None):
             'PARAM':new_state}
     return write(msg)
 
-def motor_enable(enable_state):
-    if enable_state:
-        is_writing = 1
-    else:
+def motor_enable(enable_state=None):
+    if enable_state==None:
         is_writing = 0
         enable_state = 0
+    else:
+        is_writing = 1
+
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
             'FUNCTION': PIZZA_FUNCTIONS['ENABLE'],
             'ACTUATOR_NUM':0,
             'PARAM':enable_state}
+    return write(msg)
 
 def move_stepper(steps: int=None):
-    if steps:
-        is_writing = 1
-        steps = to_raw_byte(steps)
-    else:
+    if steps==None:
         is_writing = 0
         steps = 0
+    else:
+        is_writing = 1
+        steps = to_raw_byte(steps)
+
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
             'FUNCTION': PIZZA_FUNCTIONS['MOVE'],
