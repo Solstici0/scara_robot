@@ -63,7 +63,7 @@ def write(command:dict):
             print("Message NOT sent")
 
 
-def acceleration(mot_number, new_acc=None):
+def acceleration(new_acc=None):
     if new_acc:
         is_writing = 1
     else:
@@ -73,12 +73,12 @@ def acceleration(mot_number, new_acc=None):
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
             'FUNCTION': PIZZA_FUNCTIONS['ACCELERATION'],
-            'ACTUATOR_NUM':mot_number,
+            'ACTUATOR_NUM':0,
             'PARAM':new_acc}
 
     return write(msg)
 
-def speed(mot_number, new_speed=None):
+def speed(new_speed=None):
     if new_speed:
         is_writing = 1
     else:
@@ -88,7 +88,7 @@ def speed(mot_number, new_speed=None):
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
             'FUNCTION': PIZZA_FUNCTIONS['SPEED'],
-            'ACTUATOR_NUM':mot_number,
+            'ACTUATOR_NUM':0,
             'PARAM':new_speed}
     return write(msg)
 
@@ -105,8 +105,19 @@ def solenoid(new_state=None):
             'PARAM':new_state}
     return write(msg)
 
+def motor_enable(enable_state):
+    if enable_state:
+        is_writing = 1
+    else:
+        is_writing = 0
+        enable_state = 0
+    msg = {'IS_WRITING': is_writing,
+            'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
+            'FUNCTION': PIZZA_FUNCTIONS['ENABLE'],
+            'ACTUATOR_NUM':0,
+            'PARAM':enable_state}
 
-def move_stepper(mot_num : int, steps: int=None):
+def move_stepper(steps: int=None):
     if steps:
         is_writing = 1
         steps = to_raw_byte(steps)
@@ -116,7 +127,7 @@ def move_stepper(mot_num : int, steps: int=None):
     msg = {'IS_WRITING': is_writing,
             'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
             'FUNCTION': PIZZA_FUNCTIONS['MOVE'],
-            'ACTUATOR_NUM':mot_num,
+            'ACTUATOR_NUM':0,
             'PARAM':steps}
     return write(msg)
 

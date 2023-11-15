@@ -76,6 +76,7 @@ class Robot():
                 joint.j_setup(joint.pos_0_in_turns)
             else:
                 joint.j_setup()
+        pizza.motor_enable(1)
 
     def go_home(self):
         """
