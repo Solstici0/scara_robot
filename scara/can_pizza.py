@@ -1,5 +1,6 @@
 import can
 import logging
+import ctypes
 
 logger = logging.getLogger(__name__)
 
@@ -62,16 +63,67 @@ def write(command:dict):
             print("Message NOT sent")
 
 
-def acceleration():
-    return
-def speed():
-    return
+def acceleration(mot_number, new_acc=None):
+    if new_acc:
+        is_writing = 1
+    else:
+        is_writing = 0
+        new_acc = 0
+        
+    msg = {'IS_WRITING': is_writing,
+            'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
+            'FUNCTION': PIZZA_FUNCTIONS['ACCELERATION'],
+            'ACTUATOR_NUM':mot_number,
+            'PARAM':new_acc}
 
-def initialize_pizza():
-    return
+    return write(msg)
 
-def move_stepper(mot_num : int, steps: int):
-    return
+def speed(mot_number, new_speed=None):
+    if new_speed:
+        is_writing = 1
+    else:
+        is_writing = 0
+        new_speed = 0
+        
+    msg = {'IS_WRITING': is_writing,
+            'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
+            'FUNCTION': PIZZA_FUNCTIONS['SPEED'],
+            'ACTUATOR_NUM':mot_number,
+            'PARAM':new_speed}
+    return write(msg)
 
-def digital_putput():
-    return
+def solenoid(new_state=None):
+    if new_state:
+        is_writing = 1
+    else:
+        is_writing = 0
+        new_state = 0
+    msg = {'IS_WRITING': is_writing,
+            'ACTUATOR': PIZZA_ACTUATORS['DIGITAL_OUTPUT'],
+            'FUNCTION': PIZZA_FUNCTIONS['STATE'],
+            'ACTUATOR_NUM':0,
+            'PARAM':new_state}
+    return write(msg)
+
+
+def move_stepper(mot_num : int, steps: int=None):
+    if steps:
+        is_writing = 1
+        steps = to_raw_byte(steps)
+    else:
+        is_writing = 0
+        steps = 0
+    msg = {'IS_WRITING': is_writing,
+            'ACTUATOR': PIZZA_ACTUATORS['STEPPER'],
+            'FUNCTION': PIZZA_FUNCTIONS['MOVE'],
+            'ACTUATOR_NUM':mot_num,
+            'PARAM':steps}
+    return write(msg)
+
+def to_raw_byte(input_int):
+    if 0 <= input_int <= 32767:
+        return input_int
+    elif -32768 <= input_int < 0:
+        return 0x8000+ (32768+input_int)
+    else:
+        return 0

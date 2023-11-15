@@ -7,7 +7,7 @@ import os
 
 from .joint import Joint
 from .tools.inverse_kinematic import inverse_kinematic
-#from .tools.a_interaction import a_interaction
+import can_pizza as pizza
 from .tools.manage_files import load_robot_config
 import scara.tools.kinematics as kin
 logger = logging.getLogger(__name__)
@@ -158,4 +158,9 @@ class Robot():
         self.hombro.axis.controller.input_pos = (turns_hombro)
         self.codo.axis.controller.input_pos = (turns_codo)
 
+    def a_move(self,steps):
+        return pizza.move_stepper(steps)
+    
+    def solenoid(self,state):
+        return pizza.solenoid(state)
         
