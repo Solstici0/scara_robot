@@ -27,6 +27,7 @@ steps_per_iter = int(50.0/refresh_rate)
 def axis_callback(x,y,z):
     global current_x
     global current_y
+    global current_z
     global gain
     global nelen
     global current_orientation
