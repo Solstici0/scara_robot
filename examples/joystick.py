@@ -142,8 +142,7 @@ if __name__ == "__main__":
     nelen = scara.Robot()  # creates an instance of the scara robot
     config_trap_traj()
     nelen.move(init_point[0],init_point[1],init_point[2])
-    time.sleep(3)
-
+    wait_for_vueltita = True
     try:
         with Xbox360Controller(0, axis_threshold=0.2) as controller:
             controller.button_start.when_pressed = vueltita
@@ -152,7 +151,6 @@ if __name__ == "__main__":
             controller.button_x.when_released = on_increase_released
             controller.button_y.when_pressed = on_decrease_pressed
             controller.button_y.when_released = on_decrease_released
-            config_filter()
             t = time.clock_gettime(0)
             while True:
                 if time.clock_gettime(0)-t >= period:
