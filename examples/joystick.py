@@ -135,9 +135,12 @@ if __name__ == "__main__":
                     y = clamp(-1*controller.axis_l.y)
                     z = controller.button_a.is_pressed-controller.button_b.is_pressed
                     axis_callback(x,y,z)
-                    if increasing:
-                        a_increase()
-                    elif decreasing:
-                        a_decrease()
+                    try:
+                        if increasing:
+                            a_increase()
+                        elif decreasing:
+                            a_decrease()
+                    except:
+                        pass
     except KeyboardInterrupt:
         pass
