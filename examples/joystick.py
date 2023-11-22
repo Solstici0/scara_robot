@@ -3,6 +3,7 @@ import logging
 from xbox360controller import Xbox360Controller
 import scara.can_pizza as pizza
 import time
+import argparse
 
 increasing = False
 decreasing = False
@@ -22,9 +23,10 @@ refresh_rate = 100.0
 period = 1.0/refresh_rate
 
 gain = axis_speed/refresh_rate
-steps_per_iter = int(50.0/refresh_rate)
-if steps_per_iter == 0:
-    steps_per_iter = 1
+
+#a axis runs in a different time
+steps_per_iter = 50
+a_period = 0.5
 
 def axis_callback(x,y,z):
     global current_x
@@ -71,10 +73,8 @@ def vueltita(arg):
         current_orientation = "left"
     else:
         current_orientation = "right"
-    config_trap_traj()
     wait_for_vueltita = True
     nelen.move(current_x,current_y,current_z,current_orientation)
-    t = t+3
 
 def a_increase():
     global nelen
@@ -120,27 +120,42 @@ INPUT_MODE_TRAP_TRAJ = 5
 
 wait_for_vueltita = False
 
-def config_trap_traj():
-    nelen.hombro.axis.controller.config.input_mode  = INPUT_MODE_TRAP_TRAJ
-    nelen.codo.axis.controller.config.input_mode  = INPUT_MODE_TRAP_TRAJ
-
-
-def config_filter():
-    nelen.hombro.axis.controller.config.input_mode  = INPUT_MODE_POS_FILTER
-    nelen.codo.axis.controller.config.input_mode  = INPUT_MODE_POS_FILTER
-    nelen.hombro.axis.controller.config.input_filter_bandwidth  = refresh_rate/2
-    nelen.codo.axis.controller.config.input_filter_bandwidth  = refresh_rate/2
-
-
 def main():
         
      # Start an IPython terminal
     banner = "Welcome to the scara IPython terminal"
 
 if __name__ == "__main__":
+    global axis_speed 
+    global refresh_rate
+    global period
+    global gain 
+    global steps_per_iter
+    parser = argparse.ArgumentParser(description="Operates the scara with a controller")
+    
+    # Define optional float arguments
+    parser.add_argument("--speed", type=float, help="maximum x,y and z speed in mm/s")
+    parser.add_argument("--rate", type=float, help="amount of instructions send each second")
+
+    # Parse the command-line arguments
+    args = parser.parse_args()
+    update = False
+
+    if args.speed:
+        axis_speed = args.speed
+        update = True
+    if args.rate:
+        refresh_rate = args.rate
+        update = True
+    
+    if update:
+        period = 1.0/refresh_rate
+        gain = axis_speed/refresh_rate
+        
+
     # scara.logger.setLevel(logging.INFO)  # set info level for logger
     nelen = scara.Robot()  # creates an instance of the scara robot
-    config_trap_traj()
+    
     nelen.move(init_point[0],init_point[1],init_point[2])
     wait_for_vueltita = True
     try:
@@ -152,6 +167,7 @@ if __name__ == "__main__":
             controller.button_y.when_pressed = on_decrease_pressed
             controller.button_y.when_released = on_decrease_released
             t = time.clock_gettime(0)
+            t_a = t
             while True:
                 if time.clock_gettime(0)-t >= period:
                     t = time.clock_gettime(0)
@@ -159,19 +175,21 @@ if __name__ == "__main__":
                         if nelen.hombro.axis.controller.trajectory_done \
                         and nelen.codo.axis.controller.trajectory_done:
                             wait_for_vueltita = False
-                            config_filter()
                     else:
                         x = clamp(controller.axis_l.x)
                         y = clamp(-1*controller.axis_l.y)
                         z = controller.button_a.is_pressed-controller.button_b.is_pressed
                         axis_callback(x,y,z)
-                        try:
-                            if increasing:
-                                a_increase()
-                            elif decreasing:
-                                a_decrease()
-                        except:
-                            pass
+                        
+                if time.clock_gettime(0)-t_a >= a_period:
+                    t_a = time.clock_gettime(0)
+                    try:
+                        if increasing:
+                            a_increase()
+                        elif decreasing:
+                            a_decrease()
+                    except:
+                        pass
+
     except KeyboardInterrupt:
-        config_trap_traj()
         pass
