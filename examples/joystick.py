@@ -23,6 +23,8 @@ period = 1.0/refresh_rate
 
 gain = axis_speed/refresh_rate
 steps_per_iter = int(50.0/refresh_rate)
+if steps_per_iter == 0:
+    steps_per_iter = 1
 
 def axis_callback(x,y,z):
     global current_x
