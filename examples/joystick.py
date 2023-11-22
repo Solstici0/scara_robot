@@ -156,8 +156,8 @@ if __name__ == "__main__":
                 if time.clock_gettime(0)-t >= period:
                     t = time.clock_gettime(0)
                     if wait_for_vueltita:
-                        if nelen.hombro.controller.trajectory_done \
-                        and nelen.codo.controller.trajectory_done:
+                        if nelen.hombro.axis.controller.trajectory_done \
+                        and nelen.codo.axis.controller.trajectory_done:
                             wait_for_vueltita = False
                             config_filter()
                     else:
@@ -173,4 +173,5 @@ if __name__ == "__main__":
                         except:
                             pass
     except KeyboardInterrupt:
+        config_trap_traj()
         pass
