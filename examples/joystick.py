@@ -60,16 +60,21 @@ def axis_callback(x,y,z):
     nelen.move(current_x,current_y,current_z,current_orientation)
 
 def vueltita(arg):
+    global t
     global current_x
     global current_y
     global gain
     global nelen
     global current_orientation
+    global wait_for_vueltita
     if current_orientation == "right":
         current_orientation = "left"
     else:
         current_orientation = "right"
+    config_trap_traj()
+    wait_for_vueltita = True
     nelen.move(current_x,current_y,current_z,current_orientation)
+    t = t+3
 
 def a_increase():
     global nelen
@@ -110,6 +115,23 @@ def clamp(value,limit=0.33):
     else:
         return -1
 
+INPUT_MODE_POS_FILTER = 3
+INPUT_MODE_TRAP_TRAJ = 5
+
+wait_for_vueltita = False
+
+def config_trap_traj():
+    nelen.hombro.axis.controller.config.input_mode  = INPUT_MODE_TRAP_TRAJ
+    nelen.codo.axis.controller.config.input_mode  = INPUT_MODE_TRAP_TRAJ
+
+
+def config_filter():
+    nelen.hombro.axis.controller.config.input_mode  = INPUT_MODE_POS_FILTER
+    nelen.codo.axis.controller.config.input_mode  = INPUT_MODE_POS_FILTER
+    nelen.hombro.axis.controller.config.input_filter_bandwidth  = refresh_rate/2
+    nelen.codo.axis.controller.config.input_filter_bandwidth  = refresh_rate/2
+
+
 def main():
         
      # Start an IPython terminal
@@ -118,6 +140,7 @@ def main():
 if __name__ == "__main__":
     # scara.logger.setLevel(logging.INFO)  # set info level for logger
     nelen = scara.Robot()  # creates an instance of the scara robot
+    config_trap_traj()
     nelen.move(init_point[0],init_point[1],init_point[2])
     time.sleep(3)
 
@@ -129,20 +152,27 @@ if __name__ == "__main__":
             controller.button_x.when_released = on_increase_released
             controller.button_y.when_pressed = on_decrease_pressed
             controller.button_y.when_released = on_decrease_released
+            config_filter()
             t = time.clock_gettime(0)
             while True:
                 if time.clock_gettime(0)-t >= period:
                     t = time.clock_gettime(0)
-                    x = clamp(controller.axis_l.x)
-                    y = clamp(-1*controller.axis_l.y)
-                    z = controller.button_a.is_pressed-controller.button_b.is_pressed
-                    axis_callback(x,y,z)
-                    try:
-                        if increasing:
-                            a_increase()
-                        elif decreasing:
-                            a_decrease()
-                    except:
-                        pass
+                    if wait_for_vueltita:
+                        if nelen.hombro.codo.controller.trajectory_done \
+                        and nelen.hombro.hombro.controller.trajectory_done:
+                            wait_for_vueltita = False
+                            config_filter()
+                    else:
+                        x = clamp(controller.axis_l.x)
+                        y = clamp(-1*controller.axis_l.y)
+                        z = controller.button_a.is_pressed-controller.button_b.is_pressed
+                        axis_callback(x,y,z)
+                        try:
+                            if increasing:
+                                a_increase()
+                            elif decreasing:
+                                a_decrease()
+                        except:
+                            pass
     except KeyboardInterrupt:
         pass
