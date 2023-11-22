@@ -18,7 +18,7 @@ y_lims = [400.0,600.0]
 z_lims = [30.0,170.0]
 
 axis_speed = 60.0 #mm/s
-refresh_rate = 10.0
+refresh_rate = 100.0
 period = 1.0/refresh_rate
 
 gain = axis_speed/refresh_rate
@@ -106,7 +106,7 @@ def main():
     banner = "Welcome to the scara IPython terminal"
 
 if __name__ == "__main__":
-    scara.logger.setLevel(logging.INFO)  # set info level for logger
+    # scara.logger.setLevel(logging.INFO)  # set info level for logger
     nelen = scara.Robot()  # creates an instance of the scara robot
     nelen.move(init_point[0],init_point[1],init_point[2])
     time.sleep(3)
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                 if time.clock_gettime(0)-t >= period:
                     t = time.clock_gettime(0)
                     x = controller.axis_l.x
-                    y = controller.axis_l.y
+                    y = -1*controller.axis_l.y
                     z = controller.button_a.is_pressed-controller.button_b.is_pressed
                     axis_callback(x,y,z)
                     if increasing:
