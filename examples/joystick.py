@@ -100,6 +100,14 @@ def on_decrease_released(arg):
 def a_init(arg):
     pizza.motor_enable(1)
 
+def clamp(value,limit=0.33):
+    if -1*limit <= value <= limit:
+        return 0
+    elif value> limit:
+        return 1
+    else:
+        return -1
+
 def main():
         
      # Start an IPython terminal
@@ -123,8 +131,8 @@ if __name__ == "__main__":
             while True:
                 if time.clock_gettime(0)-t >= period:
                     t = time.clock_gettime(0)
-                    x = controller.axis_l.x
-                    y = -1*controller.axis_l.y
+                    x = clamp(controller.axis_l.x)
+                    y = clamp(-1*controller.axis_l.y)
                     z = controller.button_a.is_pressed-controller.button_b.is_pressed
                     axis_callback(x,y,z)
                     if increasing:
