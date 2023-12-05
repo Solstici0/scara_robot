@@ -5,7 +5,7 @@ from pathlib import Path
 import argparse
 import numpy as np
 
-remote_file_path = Path("~/data/last_data.pkl").expanduser()
+remote_file_path = Path("/home/ubuntu/data/last_data.pkl")
 local_file_path = Path("~/data/last_data.pkl").expanduser()
 
 def download_file(hostname,port,username,password):
@@ -22,7 +22,8 @@ def download_file(hostname,port,username,password):
 
         # Download the file
         sftp.get(str(remote_file_path), str(local_file_path))
-        
+    except:
+        print(str(remote_file_path))
 
     finally:
         # Close the SSH and SFTP connections
@@ -85,14 +86,14 @@ def plot(data:list):
     
 
     fig2, (ax4, ax5, ax6) = plt.subplots(3, 1)
-    l_expected2, = ax4.plot(time,hombro_pos_set_point)
-    l_actual2, = ax4.plot(time,hombro_pos_estimate)
+    l_expected2, = ax4.plot(time,codo_pos_set_point)
+    l_actual2, = ax4.plot(time,codo_pos_estimate)
 
-    ax5.plot(time,hombro_vel_set_point)
-    ax5.plot(time,hombro_vel_estimate)
+    ax5.plot(time,codo_vel_set_point)
+    ax5.plot(time,codo_vel_estimate)
 
-    ax6.plot(time,hombro_Iq_set_point)
-    ax6.plot(time,hombro_Iq_measured)
+    ax6.plot(time,codo_Iq_set_point)
+    ax6.plot(time,codo_Iq_measured)
 
     ax4.set_ylabel('Position [rads]')
     ax5.set_ylabel('Speed [rads/s]')
@@ -102,6 +103,7 @@ def plot(data:list):
     fig2.suptitle('Codo',x=0.4,y = 0.95)
     fig2.show()
     fig1.show()
+    plt.show()
     
 
         
