@@ -204,7 +204,7 @@ class Robot():
                 break
             elif self.hombro.odrv.error != 0 and self.z.odrv.error != 0:
                 break
-        with open(data_path,'rb') as file:
+        with open(data_path,'wb') as file:
             pkl.dump(data,file)
             
     

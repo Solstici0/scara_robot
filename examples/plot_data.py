@@ -121,3 +121,6 @@ def main():
     # Load data from the downloaded file
     data = load_data()
     plot(data)
+
+if __name__ == '__main__':
+    main()
