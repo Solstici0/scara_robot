@@ -126,11 +126,6 @@ def main():
     banner = "Welcome to the scara IPython terminal"
 
 if __name__ == "__main__":
-    global axis_speed 
-    global refresh_rate
-    global period
-    global gain 
-    global steps_per_iter
     parser = argparse.ArgumentParser(description="Operates the scara with a controller")
     
     # Define optional float arguments
