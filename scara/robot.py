@@ -168,7 +168,8 @@ class Robot():
              orientation : str = "right",
              frequency = 100):
         """
-        Moves the robot to the desired position in cartesians. It also stores the data in a pickle file
+        Moves the robot to the desired position in cartesians. 
+        It also stores the data in a pickle file located at ~/data/last_data.pkl
         """
         period_in_ns = int(1e9/frequency)
         data = []
