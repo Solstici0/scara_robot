@@ -1,0 +1,3 @@
+[submodule "scara/odrive_can"]
+	path = scara/odrive_can
+	url = git@github.com:srFelipes/odrive_can.git
