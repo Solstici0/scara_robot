@@ -49,3 +49,12 @@ def timeout_except(axis, odrive_state_code,state_timeout=default_timeouts):
         if  time.clock_gettime(1)- init_time >= state_timeout:
             raise Exception('timeout in ' + odrive_state[odrive_state_code])
     return True
+
+def general_eval_except(eval_func, except_string, time_limit = default_timeouts):
+    
+    init_time = time.clock_gettime(1)
+    while not eval_func():
+        if  time.clock_gettime(1)- init_time >= time_limit:
+            raise Exception(except_string)
+        time.sleep(0.1)
+    return True

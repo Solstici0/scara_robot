@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 import pickle as pkl
 import time
 from pathlib import Path
+from .joint_can import Joint_can
 
 home_path = Path('~').expanduser()
 data_path = home_path / 'data' / 'last_data.pkl'
@@ -23,7 +24,8 @@ class Robot():
     Robot class
     """
     def __init__(self,
-               config_file: str = "default"):
+                 config_file: str = "default",
+                 use_can = False):
         logger.info("Initializing SCARA robot")
         self.config_file = config_file + ".yaml"
         abs_path = os.path.dirname(__file__)
@@ -33,21 +35,26 @@ class Robot():
         # load configuration
         joints, dimensions = load_robot_config(self.config_path)
         # joints
-        self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
-                       axis_name=joints["z"]["axis_name"],
-                       name=joints["z"]["name"],
-                       config_file=config_file
-                       )
-        self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
-                          axis_name=joints["codo"]["axis_name"],
-                          name=joints["codo"]["name"],
-                          enable_odrv=False, # TODO FIX by creating a singleton for odrv init
-                          config_file=config_file,
-                          odrv=self.z.odrv)
-        self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
-                            axis_name=joints["hombro"]["axis_name"],
-                            name=joints["hombro"]["name"],
-                            config_file=config_file)
+        if (use_can):
+            self.z = Joint_can('z', config_file=config_file)
+            self.codo = Joint_can('codo', config_file=config_file,)
+            self.hombro = Joint_can('hombro', config_file=config_file)
+        else:
+            self.z = Joint(odrv_serial_num=joints["z"]["odrv_serial_num"],
+                        axis_name=joints["z"]["axis_name"],
+                        name=joints["z"]["name"],
+                        config_file=config_file
+                        )
+            self.codo = Joint(odrv_serial_num=joints["codo"]["odrv_serial_num"],
+                            axis_name=joints["codo"]["axis_name"],
+                            name=joints["codo"]["name"],
+                            enable_odrv=False, # TODO FIX by creating a singleton for odrv init
+                            config_file=config_file,
+                            odrv=self.z.odrv)
+            self.hombro = Joint(odrv_serial_num=joints["hombro"]["odrv_serial_num"],
+                                axis_name=joints["hombro"]["axis_name"],
+                                name=joints["hombro"]["name"],
+                                config_file=config_file)
         # dict with all joints
         self.all_joints = {"hombro": self.hombro,
                            "codo": self.codo,
