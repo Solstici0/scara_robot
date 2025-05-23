@@ -1,10 +1,10 @@
-from odrive_can.src.axis import Axis
+from odrive_can.axis import Axis
 import logging
 import os
-from tools.manage_files import load_robot_config
-import scara.odrive_can.src.odrive_enums as enums
+from scara.tools.manage_files import load_robot_config
+import odrive_can.odrive_enums as enums
 import time
-import tools.exceptions as exceptions
+import scara.tools.exceptions as exceptions
 
 logger = logging.getLogger(__name__)
 

@@ -1,3 +1,5 @@
 odrive
 numpy 
 pyyaml
+can
+git+ssh://git@github.com/SrFelipes/odrive_can.git@main
