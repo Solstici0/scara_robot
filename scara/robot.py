@@ -151,6 +151,7 @@ class Robot():
             pos_from_0 = all_pos[joint_name] - self.all_pos_0[joint_name]
             joint.j_move2(position_increment=pos_from_0,
                           from_goal_point=False)
+
     def move(self,
              x: float,
              y: float,
@@ -158,30 +159,29 @@ class Robot():
              orientation : str = "right"):
         """
         Moves the robot to the desired position in cartesians.
-        
         """
-        new_radians = kin.inverse_kin(x,y,orientation)
-        new_turns = {"hombro" : new_radians["hombro"]*self.hombro.hardware_correction,
+        new_radians = kin.inverse_kin(x, y, orientation)
+        new_turns = {"hombro": new_radians["hombro"]*self.hombro.hardware_correction,
                      "codo": new_radians["codo"]*self.codo.hardware_correction,
                      "z": z*self.z.hardware_correction}
         self.hombro.j_move_abs(new_turns["hombro"])
         self.codo.j_move_abs(new_turns["codo"])
         self.z.j_move_abs(new_turns["z"])
-    
+
     def move_with_data(self,
-             x: float,
-             y: float,
-             z: float,
-             orientation : str = "right",
-             frequency = 100):
+                       x: float,
+                       y: float,
+                       z: float,
+                       orientation: str = "right",
+                       frequency=100):
         """
         Moves the robot to the desired position in cartesians. 
         It also stores the data in a pickle file located at ~/data/last_data.pkl
         """
         period_in_ns = int(1e9/frequency)
         data = []
-        new_radians = kin.inverse_kin(x,y,orientation)
-        new_turns = {"hombro" : new_radians["hombro"]*self.hombro.hardware_correction,
+        new_radians = kin.inverse_kin(x, y, orientation)
+        new_turns = {"hombro": new_radians["hombro"]*self.hombro.hardware_correction,
                      "codo": new_radians["codo"]*self.codo.hardware_correction,
                      "z": z*self.z.hardware_correction}
         self.hombro.j_move_abs(new_turns["hombro"])
@@ -191,19 +191,21 @@ class Robot():
         while True:
             if time.time_ns()-timer >= period_in_ns:
                 timer = time.time_ns()
-                new_data= [timer,
-                                self.hombro.axis.controller.pos_setpoint,
-                                self.hombro.axis.encoder.pos_estimate,
-                                self.hombro.axis.controller.vel_setpoint,
-                                self.hombro.axis.encoder.vel_estimate,
-                                self.hombro.axis.motor.current_control.Iq_setpoint,
-                                self.hombro.axis.motor.current_control.Iq_measured,
-                                self.codo.axis.controller.pos_setpoint,
-                                self.codo.axis.encoder.pos_estimate,
-                                self.codo.axis.controller.vel_setpoint,
-                                self.codo.axis.encoder.vel_estimate,
-                                self.codo.axis.motor.current_control.Iq_setpoint,
-                                self.codo.axis.motor.current_control.Iq_measured]
+                new_data= [
+                    timer,
+                    self.hombro.axis.controller.pos_setpoint,
+                    self.hombro.axis.encoder.pos_estimate,
+                    self.hombro.axis.controller.vel_setpoint,
+                    self.hombro.axis.encoder.vel_estimate,
+                    self.hombro.axis.motor.current_control.Iq_setpoint,
+                    self.hombro.axis.motor.current_control.Iq_measured,
+                    self.codo.axis.controller.pos_setpoint,
+                    self.codo.axis.encoder.pos_estimate,
+                    self.codo.axis.controller.vel_setpoint,
+                    self.codo.axis.encoder.vel_estimate,
+                    self.codo.axis.motor.current_control.Iq_setpoint,
+                    self.codo.axis.motor.current_control.Iq_measured
+                ]
                 data.append(new_data)
             if self.hombro.axis.controller.trajectory_done \
                and self.codo.axis.controller.trajectory_done \
@@ -213,17 +215,14 @@ class Robot():
                 break
         with open(data_path,'wb') as file:
             pkl.dump(data,file)
-            
-    
-
 
     def move_direct(self, turns_hombro, turns_codo):
         self.hombro.axis.controller.input_pos = (turns_hombro)
         self.codo.axis.controller.input_pos = (turns_codo)
 
-    def a_move(self,steps):
+    def a_move(self, steps):
         return pizza.move_stepper(steps)
     
-    def solenoid(self,state):
+    def solenoid(self, state):
         return pizza.solenoid(state)
         
