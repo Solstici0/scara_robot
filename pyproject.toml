@@ -13,8 +13,7 @@ dependencies = [
     "odrive",
     "numpy",
     "pyyaml",
-    "can",
-    "tools",
+    "python-can",
     "odrive_can @ git+ssh://git@github.com/SrFelipes/odrive_can.git@main"
 ]
 requires-python = ">=3.10"
