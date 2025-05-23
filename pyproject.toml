@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scara"
+version = "0.0.3"
+description = "Solsticios Selective Compliance Articulated Robot Arm package"
+authors = [{ name = "Solsticio", email = "contacto@solstic.io" }]
+readme = "README.md"
+license = { text = "MIT" }
+dependencies = [
+    "odrive",
+    "numpy",
+    "pyyaml",
+    "can",
+    "tools",
+    "odrive_can @ git+ssh://git@github.com/SrFelipes/odrive_can.git@main"
+]
+requires-python = ">=3.8"
+
+[tool.setuptools]
+packages = ["scara"]
