@@ -1,5 +1,6 @@
 # SCARA
-[![Documentation Status](https://readthedocs.org/projects/scara-robot/badge/?version=latest)](https://scara-robot.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/scara-robot/badge/?version=latest)](https://scara-robot.readthedocs.io/en/latest/?badge=latest) ![Flake8 Linting](https://github.com/Solstici0/scara_robot/actions/workflows/lint.yml/badge.svg)
+
 
 A python library and documentation to interact with Solsticio's Selective 
 Compliance Articulated Robot Arm
