@@ -25,15 +25,16 @@ class Joint_can():
             joints, _ = load_robot_config(self.config_path)
             if not ('axis_can_id' in joints[axis_name].keys()):
                 raise Exception('Configuration files does not have a can_id for %s axis', axis_name)
-            self.axis_can = Axis(joints[axis_name],"vcan0")
+            self.axis_can = Axis(joints[axis_name]['axis_can_id'],"can0")
             self.axis_name = axis_name
+            self.pos_0 = joints[axis_name]['pos_0_in_turns']
         else:
             raise Exception('No configuration file was given')
         pass
     def j_setup(self,startup_position = None):
         logger.info("Setup routine for %s axis", self.axis_name)
 
-        self.axis_can.set_requested_state(enums.AxisState(enums.AXIS_STATE_ENCODER_OFFSET_CALIBRATION))
+        self.axis_can.set_requested_state(enums.AXIS_STATE_ENCODER_OFFSET_CALIBRATION)
         time.sleep(0.2)
         self.wait_for_state(enums.AxisState(enums.AXIS_STATE_ENCODER_OFFSET_CALIBRATION),
                             OFFSET_CALIB_TIME)
@@ -42,16 +43,16 @@ class Joint_can():
                             OFFSET_CALIB_TIME) #exception if time out and still in the same state
         logger.info('got out of AXIS_STATE_ENCODER_OFFSET_CALIBRATION')
         #execute homing
-        self.axis_can.set_requested_state(enums.AxisState(enums.AXIS_STATE_HOMING))
-        time.sleep(0.2)
-        self.wait_for_state(enums.AxisState(enums.AXIS_STATE_HOMING),
-                            HOMING_TIME) #exception if unable to enter requested state
-        logger.info('succesfully entered AXIS_STATE_HOMING')  
-        self.wait_for_state(enums.AxisState(enums.AXIS_STATE_IDLE),
-                            HOMING_TIME) #exception if time out and still in the same state
-        logger.info('Current axis successfully homed')
+        # self.axis_can.set_requested_state(enums.AXIS_STATE_HOMING)
+        # time.sleep(0.2)
+        # self.wait_for_state(enums.AxisState(enums.AXIS_STATE_HOMING),
+        #                     HOMING_TIME) #exception if unable to enter requested state
+        # logger.info('succesfully entered AXIS_STATE_HOMING')  
+        # self.wait_for_state(enums.AxisState(enums.AXIS_STATE_IDLE),
+        #                     HOMING_TIME) #exception if time out and still in the same state
+        # logger.info('Current axis successfully homed')
         #execute control loop
-        self.axis_can.set_requested_state(enums.AxisState(enums.AXIS_STATE_CLOSED_LOOP_CONTROL))
+        self.axis_can.set_requested_state(enums.AXIS_STATE_CLOSED_LOOP_CONTROL)
         time.sleep(0.2)
         self.wait_for_state(enums.AxisState(enums.AXIS_STATE_CLOSED_LOOP_CONTROL)) #exception if unable to enter requested state
         logger.info('Current axis successfully enters control mod3')
@@ -68,7 +69,7 @@ class Joint_can():
         pass
 
     def j_move_abs(self,new_target : float):
-        logger.info("%s axis setpoint will change to %f",self.name,new_target)
+        logger.info("%s axis setpoint will change to %f",self.axis_name,new_target)
         self.axis_can.set_input_pos(new_target)
 
     def dump_errors(self,argument = None):
